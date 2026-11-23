@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build and distribution outputs
+dist/
+build/
+out/
+.turbo/
+
+# Internal documentation and agent configuration
+.agent/
+.agents/
+docs/
+PROGRESS.md
+SETUP.md
+DECISIONS.md
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# System & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
