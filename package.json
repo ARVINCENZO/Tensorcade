@@ -1,0 +1,36 @@
+{
+  "name": "tensorcade",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.21.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "typecheck": "tsc -b",
+    "build-storybook": "pnpm --filter @tensorcade/ui build-storybook",
+    "check:bundle-size": "node scripts/check-bundle-size.mjs",
+    "test:vrt": "playwright test tests/e2e/vrt.spec.ts",
+    "test:axe": "playwright test tests/e2e/axe.spec.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@eslint/js": "^9.21.0",
+    "@lhci/cli": "^0.14.0",
+    "@playwright/test": "~1.49.0",
+    "@types/node": "^22.13.4",
+    "@vitest/coverage-v8": "^3.2.7",
+    "eslint": "^9.21.0",
+    "prettier": "^3.5.2",
+    "turbo": "^2.4.4",
+    "typescript": "~5.7.3",
+    "typescript-eslint": "^8.24.1",
+    "vitest": "^3.0.7",
+    "zod": "^3.24.2"
+  }
+}

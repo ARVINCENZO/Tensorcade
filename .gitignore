@@ -7,14 +7,27 @@ dist/
 build/
 out/
 .turbo/
+*.tsbuildinfo
+storybook-static/
+test-results/
+playwright-report/
+.lighthouseci/
+coverage/
+*.lcov
 
-# Internal documentation and agent configuration
+# Agent & internal planning/review artifacts (keep local only)
 .agent/
 .agents/
-docs/
+.claude/
+.gemini/
+.cursor/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
 PROGRESS.md
-SETUP.md
 DECISIONS.md
+SETUP.md
+docs/
 
 # Environment variables & secrets
 .env

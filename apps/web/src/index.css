@@ -1,0 +1,16 @@
+@import '@tensorcade/ui/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--tc-bg-base);
+  color: var(--tc-text-primary);
+  font-family: var(--tc-font-sans);
+}

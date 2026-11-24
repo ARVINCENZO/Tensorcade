@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "references": [
+    { "path": "./apps/web" },
+    { "path": "./apps/api" },
+    { "path": "./packages/engine" },
+    { "path": "./packages/runtime" },
+    { "path": "./packages/levels" },
+    { "path": "./packages/ml-sim" },
+    { "path": "./packages/renderer" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/contracts" },
+    { "path": "./packages/editors" },
+    { "path": "./tools/parity" },
+    { "path": "./tools/level-validator" },
+    { "path": "./tests" }
+  ],
+  "files": []
+}

@@ -1,0 +1,43 @@
+{
+  "name": "@tensorcade/editors",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "@tensorcade/contracts": "workspace:*",
+    "@tensorcade/levels": "workspace:*",
+    "@tensorcade/ui": "workspace:*",
+    "blockly": "^11.2.2",
+    "clsx": "^2.1.1",
+    "monaco-editor": "^0.52.2",
+    "tailwind-merge": "^3.7.1"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@storybook/react": "^8.6.4",
+    "@tensorcade/engine": "workspace:*",
+    "@tensorcade/runtime": "workspace:*",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "happy-dom": "^21.0.4",
+    "typescript": "~5.7.3",
+    "vitest": "^3.0.7"
+  }
+}

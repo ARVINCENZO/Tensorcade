@@ -1,0 +1,44 @@
+{
+  "name": "@tensorcade/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.170.46",
+    "@tensorcade/contracts": "workspace:*",
+    "@tensorcade/editors": "workspace:*",
+    "@tensorcade/engine": "workspace:*",
+    "@tensorcade/levels": "workspace:*",
+    "@tensorcade/renderer": "workspace:*",
+    "@tensorcade/runtime": "workspace:*",
+    "@tensorcade/ui": "workspace:*",
+    "clsx": "^2.1.1",
+    "idb": "^8.0.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.1",
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@storybook/react": "^8.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "fake-indexeddb": "^6.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.7.3",
+    "vite": "^7.3.8",
+    "vitest": "^3.0.7"
+  }
+}
