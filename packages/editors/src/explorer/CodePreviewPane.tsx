@@ -66,7 +66,7 @@ export function CodePreviewPane({
           {/* Line Numbers Gutter */}
           <div
             aria-hidden="true"
-            className="mr-4 select-none border-r border-[#232E42] pr-3 text-right font-mono text-[#64748B]"
+            className="mr-4 select-none border-r border-[var(--tc-border-subtle,#232E42)] pr-3 text-right font-mono text-[var(--tc-text-muted,#94A3B8)]"
             data-testid="line-numbers-gutter"
           >
             {lines.map((_, idx) => (
@@ -79,7 +79,9 @@ export function CodePreviewPane({
           {/* Code Content */}
           <code
             className={`flex-1 font-mono ${
-              isPlaceholder ? 'italic text-[#64748B]' : 'text-[#F8FAFC]'
+              isPlaceholder
+                ? 'italic text-[var(--tc-text-muted,#94A3B8)]'
+                : 'text-[var(--tc-text-primary,#F8FAFC)]'
             }`}
             data-testid="transpiled-code-content"
           >

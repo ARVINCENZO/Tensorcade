@@ -286,7 +286,7 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
             data-testid="available-blocks-tray"
           >
             {availableBlocks.length === 0 ? (
-              <div className="text-center py-8 text-xs text-[var(--tc-text-dim)]">
+              <div className="text-center py-8 text-xs text-[var(--tc-text-muted)]">
                 All available blocks have been placed on the Solution Canvas.
               </div>
             ) : (
@@ -329,7 +329,7 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
             >
               Solution Canvas ({solution.length} blocks)
             </h2>
-            <span className="text-[10px] text-[var(--tc-text-dim)]">
+            <span className="text-[10px] text-[var(--tc-text-muted)]">
               Indent: 0, 4, 8 spaces | Tab / Shift+Tab supported
             </span>
           </div>
@@ -342,7 +342,7 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
           >
             {solution.length === 0 ? (
               <div
-                className="flex flex-col items-center justify-center h-48 border border-dashed border-[var(--tc-border-subtle)] rounded-[var(--tc-radius-sm)] text-xs text-[var(--tc-text-dim)]"
+                className="flex flex-col items-center justify-center h-48 border border-dashed border-[var(--tc-border-subtle)] rounded-[var(--tc-radius-sm)] text-xs text-[var(--tc-text-muted)]"
                 data-testid="empty-canvas-placeholder"
               >
                 <span>Add blocks from the left tray to construct your solution.</span>

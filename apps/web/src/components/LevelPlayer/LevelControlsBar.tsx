@@ -121,7 +121,11 @@ export function LevelControlsBar({
           variant="secondary"
           size="sm"
           onClick={onOpenHints}
-          aria-label="Open Hint Ladder"
+          aria-label={
+            hintTierReached > 0
+              ? `Hints (${hintTierReached}/3) — Open Hint Ladder`
+              : 'Hints — Open Hint Ladder'
+          }
         >
           Hints {hintTierReached > 0 ? `(${hintTierReached}/3)` : ''}
         </Button>

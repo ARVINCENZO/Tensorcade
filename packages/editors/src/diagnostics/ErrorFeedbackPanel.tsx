@@ -133,7 +133,7 @@ export function ErrorFeedbackPanel({
 
         <div className="rounded-[var(--tc-radius-sm)] border border-[var(--tc-border-subtle)] bg-[var(--tc-bg-base)] p-3 font-mono text-xs overflow-x-auto">
           <div className="text-[var(--tc-text-primary)] whitespace-pre">
-            <span className="text-[var(--tc-text-dim)] select-none">{linePrefix}</span>
+            <span className="text-[var(--tc-text-muted)] select-none">{linePrefix}</span>
             <span>{expandedSnippet}</span>
           </div>
           <div
@@ -191,7 +191,7 @@ export function ErrorFeedbackPanel({
             onClick={handleToggleTraceback}
             aria-expanded={isTracebackOpen}
             aria-controls="raw-traceback-content"
-            className="flex items-center gap-1.5 text-xs font-mono text-[var(--tc-text-dim)] hover:text-[var(--tc-text-primary)] transition-colors cursor-pointer select-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--tc-accent-cyan)] focus-visible:outline-offset-[var(--tc-focus-outline-offset)]"
+            className="flex items-center gap-1.5 text-xs font-mono text-[var(--tc-text-muted)] hover:text-[var(--tc-text-primary)] transition-colors cursor-pointer select-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--tc-accent-cyan)] focus-visible:outline-offset-[var(--tc-focus-outline-offset)]"
           >
             <span aria-hidden="true">{isTracebackOpen ? '▼' : '▶'}</span>
             <span>Raw Python Traceback</span>
@@ -199,7 +199,7 @@ export function ErrorFeedbackPanel({
           {isTracebackOpen ? (
             <pre
               id="raw-traceback-content"
-              className="mt-2 rounded-[var(--tc-radius-sm)] border border-[var(--tc-border-subtle)] bg-[var(--tc-bg-base)] p-3 font-mono text-xs text-[var(--tc-text-dim)] overflow-x-auto whitespace-pre-wrap"
+              className="mt-2 rounded-[var(--tc-radius-sm)] border border-[var(--tc-border-subtle)] bg-[var(--tc-bg-base)] p-3 font-mono text-xs text-[var(--tc-text-muted)] overflow-x-auto whitespace-pre-wrap"
             >
               {error.rawTraceback}
             </pre>

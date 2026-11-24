@@ -266,12 +266,14 @@ export function WorldMapLayout({
                                           }`}
                                         >
                                           <span className="flex items-center gap-2">
-                                            <span className="font-semibold">L{lvlIdx + 1}</span>
                                             {!unlocked && (
                                               <span className="text-[var(--tc-text-muted)]">
-                                                LOCKED
+                                                Locked
                                               </span>
                                             )}
+                                            <span className="font-semibold">
+                                              Level {lvlIdx + 1}
+                                            </span>
                                           </span>
 
                                           <span className="flex items-center gap-2">

@@ -341,7 +341,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
             </span>
             <span className="hidden sm:inline">
               Hash:{' '}
-              <span className="text-[var(--tc-text-dim,#64748B)]">
+              <span className="text-[var(--tc-text-muted,#94A3B8)]">
                 {currentSnapshot?.stateHashHex?.slice(0, 8) ?? '—'}
               </span>
             </span>
@@ -392,7 +392,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
       <div className="flex flex-col gap-2 p-3 bg-[var(--tc-bg-surface,#151C28)] border-t border-[var(--tc-border-subtle,#232E42)]">
         {/* Scrubber slider */}
         <div className="flex items-center gap-3">
-          <span className="text-[10px] text-[var(--tc-text-dim,#64748B)] w-8 text-right">0</span>
+          <span className="text-[10px] text-[var(--tc-text-muted,#94A3B8)] w-8 text-right">0</span>
           <input
             type="range"
             min="0"
@@ -405,7 +405,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
             aria-label="Replay Scrubbing Timeline"
             className="w-full h-1.5 bg-[var(--tc-border-subtle,#232E42)] rounded-lg appearance-none cursor-pointer accent-[var(--tc-accent-cyan,#38BDF8)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--tc-accent-cyan,#38BDF8)]"
           />
-          <span className="text-[10px] text-[var(--tc-text-dim,#64748B)] w-8">{totalTicks}</span>
+          <span className="text-[10px] text-[var(--tc-text-muted,#94A3B8)] w-8">{totalTicks}</span>
         </div>
 
         {/* Action Buttons & Speed bar */}
@@ -464,7 +464,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
 
           {/* Speed Selector */}
           <div className="flex items-center gap-1">
-            <span className="text-[11px] text-[var(--tc-text-dim,#64748B)] mr-1 hidden sm:inline">
+            <span className="text-[11px] text-[var(--tc-text-muted,#94A3B8)] mr-1 hidden sm:inline">
               Speed:
             </span>
             {([0.5, 1, 2, 4] as const).map((spd) => (

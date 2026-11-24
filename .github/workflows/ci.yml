@@ -181,6 +181,8 @@ jobs:
         run: pnpm --filter @tensorcade/web... build
 
       - name: Run Playwright Visual Regression Tests
+        env:
+          HOME: /root
         run: |
           if [ "${{ github.event.inputs.update_snapshots }}" = "true" ]; then
             UPDATE_SNAPSHOTS=true pnpm exec playwright test tests/e2e/vrt.spec.ts --update-snapshots
@@ -224,6 +226,8 @@ jobs:
         run: pnpm --filter @tensorcade/web... build
 
       - name: Run axe-core accessibility audit
+        env:
+          HOME: /root
         run: pnpm exec playwright test tests/e2e/axe.spec.ts
 
   lighthouse:
