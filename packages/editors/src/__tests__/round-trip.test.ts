@@ -30,6 +30,7 @@ import {
   RobotFarmSimulation,
   ActionTraceReplayer,
   Direction,
+  resolveGridWorldConfig,
   type GridWorldConfig,
 } from '@tensorcade/engine';
 
@@ -294,6 +295,54 @@ describe('Phase 5b End-to-End Round-Trip Parity Verification', () => {
       expect(outcome.status).toBe('WON');
       expect(outcome.starsAwarded).toBe(3);
       expect(multiCropEngine.getGridWorldState().cropsHarvested).toBe(2);
+    });
+
+    it('transpiles live sensor while not is_field_cleared() blocks and clears shifting_perimeter via Pyodide', async () => {
+      const ws = new Blockly.Workspace();
+      const whileBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_WHILE);
+      const notBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_NOT);
+      const clearedBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_IS_FIELD_CLEARED);
+      notBlk.getInput('BOOL')!.connection!.connect(clearedBlk.outputConnection!);
+      whileBlk.getInput('CONDITION')!.connection!.connect(notBlk.outputConnection!);
+
+      const ifElseBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_IF_ELSE);
+      const frontClear = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_IS_FRONT_CLEAR);
+      const stepBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_STEP);
+      const turnRightBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_TURN_RIGHT);
+      ifElseBlk.getInput('CONDITION')!.connection!.connect(frontClear.outputConnection!);
+      ifElseBlk.getInput('DO')!.connection!.connect(stepBlk.previousConnection!);
+      ifElseBlk.getInput('ELSE')!.connection!.connect(turnRightBlk.previousConnection!);
+
+      const ifHarvestBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_IF);
+      const canHarvestBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_CAN_HARVEST);
+      const harvestBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_HARVEST);
+      ifHarvestBlk.getInput('CONDITION')!.connection!.connect(canHarvestBlk.outputConnection!);
+      ifHarvestBlk.getInput('DO')!.connection!.connect(harvestBlk.previousConnection!);
+
+      whileBlk.getInput('DO')!.connection!.connect(ifElseBlk.previousConnection!);
+      ifElseBlk.nextConnection!.connect(ifHarvestBlk.previousConnection!);
+
+      const pythonCode = transpileWorkspaceToPython(ws);
+      ws.dispose();
+
+      const cfg = resolveGridWorldConfig(
+        'w1-robot-farm-1.8',
+        { generator: 'shifting_perimeter', maxTicks: 80, star2TickThreshold: 45 },
+        10801,
+      );
+      const execRes = await workerCore.executeCode({
+        code: pythonCode,
+        levelId: cfg.levelId,
+        seed: cfg.seed,
+        timeoutMs: 5000,
+        mockEnv: { __gridWorld: cfg },
+      });
+
+      expect(execRes.success).toBe(true);
+      expect(execRes.actionTrace).toBeDefined();
+      const sim = new RobotFarmSimulation(cfg);
+      const replay = ActionTraceReplayer.replay(sim, execRes.actionTrace!);
+      expect(replay.outcome.status).toBe('WON');
     });
   });
 });

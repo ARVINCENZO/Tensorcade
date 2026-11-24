@@ -205,6 +205,50 @@ describe('Blockly Explorer Editor (Sub-step 5b.2)', () => {
       expect(code).toContain('for count in range(0):\n    pass\n');
       ws.dispose();
     });
+
+    it('transpiles Robot Farm sensors, 0-based list indexing, if/elif/else, and def/return cleanly', () => {
+      const ws = new Blockly.Workspace();
+      const fnDef = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_DEF_FUNC);
+      fnDef.setFieldValue('harvest_plot', 'NAME');
+      fnDef.setFieldValue('length', 'PARAM');
+
+      const repeatExpr = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_REPEAT_EXPR);
+      const paramGet = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_VAR_GET);
+      paramGet.setFieldValue('length', 'VAR');
+      repeatExpr.getInput('TIMES')!.connection!.connect(paramGet.outputConnection!);
+
+      const stepBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_STEP);
+      repeatExpr.getInput('DO')!.connection!.connect(stepBlk.previousConnection!);
+
+      const retBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_RETURN);
+      const lenBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_LEN);
+      const plotsBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_GET_PLOT_LENGTHS);
+      lenBlk.getInput('LIST')!.connection!.connect(plotsBlk.outputConnection!);
+      retBlk.getInput('VALUE')!.connection!.connect(lenBlk.outputConnection!);
+
+      fnDef.getInput('BODY')!.connection!.connect(repeatExpr.previousConnection!);
+      repeatExpr.nextConnection!.connect(retBlk.previousConnection!);
+
+      const callBlk = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_CALL_FUNC);
+      callBlk.setFieldValue('harvest_plot', 'NAME');
+      const listGet = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_LIST_GET);
+      const plots2 = ws.newBlock(EXPLORER_BLOCK_TYPES.ROBOT_GET_PLOT_LENGTHS);
+      const zero = ws.newBlock(EXPLORER_BLOCK_TYPES.ALGO_NUMBER);
+      zero.setFieldValue('0', 'NUM');
+      listGet.getInput('LIST')!.connection!.connect(plots2.outputConnection!);
+      listGet.getInput('INDEX')!.connection!.connect(zero.outputConnection!);
+      callBlk.getInput('ARG')!.connection!.connect(listGet.outputConnection!);
+      fnDef.nextConnection!.connect(callBlk.previousConnection!);
+
+      const code = transpileWorkspaceToPython(ws);
+      ws.dispose();
+
+      expect(code).toContain('def harvest_plot(length):');
+      expect(code).toContain('    for _ in range(length):');
+      expect(code).toContain('        step()');
+      expect(code).toContain('    return len(get_plot_lengths())');
+      expect(code).toContain('harvest_plot(get_plot_lengths()[0])');
+    });
   });
 
   describe('3. Token Theme & Toolbox Configuration', () => {

@@ -4,31 +4,35 @@ import type { SolutionBlockState } from './types.js';
 export const BLANK_PATTERN = /_{3,}/g;
 
 /**
- * Normalizes an indentation specification into 0, 4, or 8 spaces.
- * Supports both indent levels (0, 1, 2) and space counts (0, 4, 8).
+ * Normalizes an indentation specification into 0, 4, 8, or 12 spaces.
+ * Supports both indent levels (0, 1, 2, 3) and space counts (0, 4, 8, 12).
  */
 export function normalizeIndent(indent: number): number {
   if (indent <= 0) return 0;
   if (indent === 1 || indent === 4) return 4;
-  if (indent === 2 || indent >= 8) return 8;
+  if (indent === 2 || indent === 8) return 8;
+  if (indent === 3 || indent >= 12) return 12;
   if (indent < 4) return 4;
-  return 8;
+  if (indent < 8) return 8;
+  return 12;
 }
 
 /**
- * Steps indentation up (0 -> 4 -> 8).
+ * Steps indentation up (0 -> 4 -> 8 -> 12).
  */
 export function stepIndentUp(currentIndent: number): number {
   const normalized = normalizeIndent(currentIndent);
   if (normalized === 0) return 4;
-  return 8;
+  if (normalized === 4) return 8;
+  return 12;
 }
 
 /**
- * Steps indentation down (8 -> 4 -> 0).
+ * Steps indentation down (12 -> 8 -> 4 -> 0).
  */
 export function stepIndentDown(currentIndent: number): number {
   const normalized = normalizeIndent(currentIndent);
+  if (normalized === 12) return 8;
   if (normalized === 8) return 4;
   return 0;
 }

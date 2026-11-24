@@ -330,7 +330,7 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
               Solution Canvas ({solution.length} blocks)
             </h2>
             <span className="text-[10px] text-[var(--tc-text-muted)]">
-              Indent: 0, 4, 8 spaces | Tab / Shift+Tab supported
+              Indent: 0, 4, 8, 12 spaces | Tab / Shift+Tab supported
             </span>
           </div>
 
@@ -358,8 +358,9 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                 const segments = parseCodeSegments(block.code);
                 const indentSpaces = normalizeIndent(slot.indent);
 
-                // Inline padding style representing exact 0, 4, or 8 space indentation
-                const indentPaddingPx = indentSpaces === 8 ? 48 : indentSpaces === 4 ? 24 : 8;
+                // Inline padding style representing exact 0, 4, 8, or 12 space indentation
+                const indentPaddingPx =
+                  indentSpaces === 12 ? 72 : indentSpaces === 8 ? 48 : indentSpaces === 4 ? 24 : 8;
 
                 return (
                   <div
@@ -417,7 +418,7 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                             variant="ghost"
                             size="sm"
                             onClick={() => handleIndentChange(index, 'in')}
-                            disabled={readOnly || indentSpaces === 8}
+                            disabled={readOnly || indentSpaces === 12}
                             aria-label={`Indent block #${index + 1}`}
                             data-testid={`indent-btn-${index}`}
                             className="h-6 px-1.5 text-[11px]"

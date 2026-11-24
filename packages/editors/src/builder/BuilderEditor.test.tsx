@@ -69,23 +69,26 @@ const sampleBlocks: ParsonsBlock[] = [
 ];
 
 describe('Builder Mode: Assembler Logic', () => {
-  it('normalizes indentations to 0, 4, or 8 spaces', () => {
+  it('normalizes indentations to 0, 4, 8, or 12 spaces', () => {
     expect(normalizeIndent(0)).toBe(0);
     expect(normalizeIndent(-1)).toBe(0);
     expect(normalizeIndent(1)).toBe(4);
-    expect(normalizeIndent(3)).toBe(4);
     expect(normalizeIndent(4)).toBe(4);
     expect(normalizeIndent(2)).toBe(8);
     expect(normalizeIndent(6)).toBe(8);
     expect(normalizeIndent(8)).toBe(8);
-    expect(normalizeIndent(12)).toBe(8);
+    expect(normalizeIndent(3)).toBe(12);
+    expect(normalizeIndent(12)).toBe(12);
+    expect(normalizeIndent(16)).toBe(12);
   });
 
-  it('steps indentation up and down within bounds', () => {
+  it('steps indentation up and down within bounds (0, 4, 8, 12)', () => {
     expect(stepIndentUp(0)).toBe(4);
     expect(stepIndentUp(4)).toBe(8);
-    expect(stepIndentUp(8)).toBe(8);
+    expect(stepIndentUp(8)).toBe(12);
+    expect(stepIndentUp(12)).toBe(12);
 
+    expect(stepIndentDown(12)).toBe(8);
     expect(stepIndentDown(8)).toBe(4);
     expect(stepIndentDown(4)).toBe(0);
     expect(stepIndentDown(0)).toBe(0);
@@ -314,10 +317,25 @@ describe('Builder Mode: BuilderEditor Component', () => {
     );
     expect(onChange).toHaveBeenLastCalledWith('        step()');
 
-    // Indent max is 8, button should be disabled
+    // Indent: 8 -> 12
+    act(() => {
+      indentBtn.click();
+    });
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 12 sp',
+    );
+    expect(onChange).toHaveBeenLastCalledWith('            step()');
+
+    // Indent max is 12, button should be disabled
     expect(indentBtn.disabled).toBe(true);
 
-    // Unindent: 8 -> 4
+    // Unindent: 12 -> 8 -> 4
+    act(() => {
+      unindentBtn.click();
+    });
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 8 sp',
+    );
     act(() => {
       unindentBtn.click();
     });
