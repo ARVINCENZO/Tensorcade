@@ -9,6 +9,13 @@ export const LEVEL_PREREQUISITES: Record<string, string[]> = {
   'w1-robot-farm-1.3': ['w1-robot-farm-1.2'],
   'w1-robot-farm-1.4': ['w1-robot-farm-1.3'],
   'w1-robot-farm-1.5': ['w1-robot-farm-1.4'],
+  'w1-robot-farm-1.6': ['w1-robot-farm-1.5'],
+  'w1-robot-farm-1.7': ['w1-robot-farm-1.6'],
+  'w1-robot-farm-1.8': ['w1-robot-farm-1.7'],
+  'w1-robot-farm-1.9': ['w1-robot-farm-1.8'],
+  'w1-robot-farm-1.10': ['w1-robot-farm-1.9'],
+  'w1-robot-farm-1.11': ['w1-robot-farm-1.10'],
+  'w1-robot-farm-1.12': ['w1-robot-farm-1.11'],
 };
 
 const LEVEL_ORDER: readonly string[] = Object.keys(LEVEL_PREREQUISITES);

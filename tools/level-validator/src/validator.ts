@@ -10,17 +10,27 @@
 
 import type { LevelManifest } from '@tensorcade/levels';
 import { PyodideWorkerCore, AstInspector } from '@tensorcade/runtime';
-import { RobotFarmSimulation, ActionTraceReplayer, Direction } from '@tensorcade/engine';
+import {
+  RobotFarmSimulation,
+  ActionTraceReplayer,
+  resolveGridWorldConfig,
+} from '@tensorcade/engine';
+
+export interface SeedValidationResult {
+  readonly seed: number;
+  readonly success: boolean;
+  readonly totalTicks: number;
+  readonly terminalHash?: string | undefined;
+  readonly cropsHarvested?: number | undefined;
+  readonly totalCrops?: number | undefined;
+  readonly starsAwarded?: number | undefined;
+  readonly error?: string | undefined;
+}
 
 export interface LevelValidationResult {
   readonly levelId: string;
   readonly valid: boolean;
-  readonly seedResults: ReadonlyArray<{
-    readonly seed: number;
-    readonly success: boolean;
-    readonly totalTicks: number;
-    readonly error?: string;
-  }>;
+  readonly seedResults: ReadonlyArray<SeedValidationResult>;
   readonly errors: ReadonlyArray<string>;
 }
 
@@ -56,22 +66,30 @@ export class LevelValidator {
       }
     }
 
-    const seedResults: Array<{
-      seed: number;
-      success: boolean;
-      totalTicks: number;
-      error?: string;
-    }> = [];
+    const seedResults: SeedValidationResult[] = [];
+    const isGridWorld = manifest.gameId.includes('farm') || manifest.id.includes('robot-farm');
 
     // 2. Execute Reference Solution across all 5 seeds
     for (const seed of manifest.seeds) {
       try {
+        const simConfig = isGridWorld
+          ? resolveGridWorldConfig(
+              manifest.id,
+              manifest.environmentConfig ?? {},
+              seed,
+              1000,
+              manifest.scoringRubric.star2.threshold,
+            )
+          : undefined;
+
         const response = await this.workerCore.executeCode({
           code: manifest.referenceSolution,
           levelId: manifest.id,
           seed,
           timeoutMs: 5000,
-          mockEnv: manifest.environmentConfig ?? {},
+          mockEnv: simConfig
+            ? { ...(manifest.environmentConfig ?? {}), __gridWorld: simConfig }
+            : (manifest.environmentConfig ?? {}),
         });
 
         if (!response.success) {
@@ -83,8 +101,8 @@ export class LevelValidator {
           continue;
         }
 
-        // 3. For GridWorld levels: Replay actions and verify victory condition
-        if (manifest.gameId.includes('farm') || manifest.id.includes('robot-farm')) {
+        // 3. For GridWorld levels: Replay actions and verify victory + efficiency condition
+        if (isGridWorld && simConfig) {
           const actionTrace = response.actionTrace;
           if (!actionTrace || actionTrace.actions.length === 0) {
             const err = `Seed ${seed}: Reference solution recorded 0 actions for a GridWorld level.`;
@@ -93,24 +111,7 @@ export class LevelValidator {
             continue;
           }
 
-          // Initialize GridWorld engine with level environment parameters
-          const gridWidth = Number(manifest.environmentConfig['width'] ?? 4);
-          const gridHeight = Number(manifest.environmentConfig['height'] ?? 4);
-
-          const engine = new RobotFarmSimulation({
-            levelId: manifest.id,
-            seed,
-            width: gridWidth,
-            height: gridHeight,
-            maxTicks: 1000,
-            initialRover: {
-              x: 0,
-              y: 0,
-              heading: Direction.EAST,
-              energy: 100,
-            },
-            crops: [{ x: 1, y: 0 }],
-          });
+          const engine = new RobotFarmSimulation(simConfig);
           const replayResult = ActionTraceReplayer.replay(engine, actionTrace);
           const finalState = engine.getSnapshot().state;
 
@@ -121,6 +122,9 @@ export class LevelValidator {
               seed,
               success: false,
               totalTicks: replayResult.totalTicks,
+              terminalHash: replayResult.serverTerminalHash,
+              cropsHarvested: finalState.cropsHarvested,
+              totalCrops: finalState.totalCropsInitial,
               error: err,
             });
             continue;
@@ -133,6 +137,27 @@ export class LevelValidator {
               seed,
               success: false,
               totalTicks: replayResult.totalTicks,
+              terminalHash: replayResult.serverTerminalHash,
+              cropsHarvested: finalState.cropsHarvested,
+              totalCrops: finalState.totalCropsInitial,
+              error: err,
+            });
+            continue;
+          }
+
+          if (
+            manifest.scoringRubric.star2.metric === 'ticks' &&
+            replayResult.totalTicks > manifest.scoringRubric.star2.threshold
+          ) {
+            const err = `Seed ${seed}: Reference solution exceeded Star 2 tick threshold (${replayResult.totalTicks} > ${manifest.scoringRubric.star2.threshold})`;
+            errors.push(err);
+            seedResults.push({
+              seed,
+              success: false,
+              totalTicks: replayResult.totalTicks,
+              terminalHash: replayResult.serverTerminalHash,
+              cropsHarvested: finalState.cropsHarvested,
+              totalCrops: finalState.totalCropsInitial,
               error: err,
             });
             continue;
@@ -142,6 +167,10 @@ export class LevelValidator {
             seed,
             success: true,
             totalTicks: replayResult.totalTicks,
+            terminalHash: replayResult.serverTerminalHash,
+            cropsHarvested: finalState.cropsHarvested,
+            totalCrops: finalState.totalCropsInitial,
+            starsAwarded: replayResult.outcome.starsAwarded,
           });
         } else {
           // For non-gridworld levels, execution success is verified

@@ -1,0 +1,488 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "world-1",
+  "gameId": "robot-farm",
+  "pyodideVersion": "314.0.8",
+  "entries": [
+    {
+      "levelId": "w1-robot-farm-1.1",
+      "seed": 10001,
+      "totalTicks": 2,
+      "terminalHash": "762484f3cca45f9a",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.1",
+      "seed": 10002,
+      "totalTicks": 2,
+      "terminalHash": "f37805ffda2ef954",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.1",
+      "seed": 10003,
+      "totalTicks": 2,
+      "terminalHash": "0db72131c187dac7",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.1",
+      "seed": 10004,
+      "totalTicks": 2,
+      "terminalHash": "1f68dfc2eb9ee879",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.1",
+      "seed": 10005,
+      "totalTicks": 2,
+      "terminalHash": "386111c3335a7c13",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.2",
+      "seed": 10201,
+      "totalTicks": 6,
+      "terminalHash": "d3e8536498ce274e",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.2",
+      "seed": 10202,
+      "totalTicks": 6,
+      "terminalHash": "5297801a4a661ed0",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.2",
+      "seed": 10203,
+      "totalTicks": 6,
+      "terminalHash": "01754cafbbf9e80b",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.2",
+      "seed": 10204,
+      "totalTicks": 6,
+      "terminalHash": "3392cf5055799b78",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.2",
+      "seed": 10205,
+      "totalTicks": 6,
+      "terminalHash": "ace2fd5ed5f180ab",
+      "cropsHarvested": 1,
+      "totalCrops": 1
+    },
+    {
+      "levelId": "w1-robot-farm-1.3",
+      "seed": 10301,
+      "totalTicks": 8,
+      "terminalHash": "ec27365c9d0546a8",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.3",
+      "seed": 10304,
+      "totalTicks": 14,
+      "terminalHash": "a6279e04c35bf973",
+      "cropsHarvested": 7,
+      "totalCrops": 7
+    },
+    {
+      "levelId": "w1-robot-farm-1.3",
+      "seed": 10307,
+      "totalTicks": 16,
+      "terminalHash": "b74b37b3a58394bb",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.3",
+      "seed": 10311,
+      "totalTicks": 14,
+      "terminalHash": "ec8d2abc87dfcbe4",
+      "cropsHarvested": 7,
+      "totalCrops": 7
+    },
+    {
+      "levelId": "w1-robot-farm-1.3",
+      "seed": 10319,
+      "totalTicks": 18,
+      "terminalHash": "80d3d60a9cca39f8",
+      "cropsHarvested": 9,
+      "totalCrops": 9
+    },
+    {
+      "levelId": "w1-robot-farm-1.4",
+      "seed": 10401,
+      "totalTicks": 15,
+      "terminalHash": "f8c4681ed5fbd2c6",
+      "cropsHarvested": 5,
+      "totalCrops": 5
+    },
+    {
+      "levelId": "w1-robot-farm-1.4",
+      "seed": 10403,
+      "totalTicks": 18,
+      "terminalHash": "82bd7a3b676a7f73",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.4",
+      "seed": 10407,
+      "totalTicks": 21,
+      "terminalHash": "e629b682424a7751",
+      "cropsHarvested": 7,
+      "totalCrops": 7
+    },
+    {
+      "levelId": "w1-robot-farm-1.4",
+      "seed": 10412,
+      "totalTicks": 18,
+      "terminalHash": "6120213b08cdedd0",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.4",
+      "seed": 10418,
+      "totalTicks": 15,
+      "terminalHash": "faa6f050dd8c9dc5",
+      "cropsHarvested": 5,
+      "totalCrops": 5
+    },
+    {
+      "levelId": "w1-robot-farm-1.5",
+      "seed": 10501,
+      "totalTicks": 4,
+      "terminalHash": "e82f24e5bd983241",
+      "cropsHarvested": 2,
+      "totalCrops": 2
+    },
+    {
+      "levelId": "w1-robot-farm-1.5",
+      "seed": 10502,
+      "totalTicks": 7,
+      "terminalHash": "e970862e3b4674a3",
+      "cropsHarvested": 2,
+      "totalCrops": 2
+    },
+    {
+      "levelId": "w1-robot-farm-1.5",
+      "seed": 10503,
+      "totalTicks": 6,
+      "terminalHash": "24a1bad1120491fb",
+      "cropsHarvested": 2,
+      "totalCrops": 2
+    },
+    {
+      "levelId": "w1-robot-farm-1.5",
+      "seed": 10504,
+      "totalTicks": 10,
+      "terminalHash": "ecaefdf8b0f94e18",
+      "cropsHarvested": 3,
+      "totalCrops": 3
+    },
+    {
+      "levelId": "w1-robot-farm-1.5",
+      "seed": 10505,
+      "totalTicks": 14,
+      "terminalHash": "3a6e7c6bb545eef0",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.6",
+      "seed": 10601,
+      "totalTicks": 17,
+      "terminalHash": "0388d9bfa60c7904",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.6",
+      "seed": 10602,
+      "totalTicks": 19,
+      "terminalHash": "e073a128b36d1174",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.6",
+      "seed": 10603,
+      "totalTicks": 15,
+      "terminalHash": "1919b820e96fa1c1",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.6",
+      "seed": 10604,
+      "totalTicks": 20,
+      "terminalHash": "6a21ef0b3eaa95ed",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.6",
+      "seed": 10605,
+      "totalTicks": 17,
+      "terminalHash": "aa52e8804414013e",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.7",
+      "seed": 10701,
+      "totalTicks": 13,
+      "terminalHash": "305a97aa1c01788d",
+      "cropsHarvested": 3,
+      "totalCrops": 3
+    },
+    {
+      "levelId": "w1-robot-farm-1.7",
+      "seed": 10702,
+      "totalTicks": 14,
+      "terminalHash": "f632cae7e44527c6",
+      "cropsHarvested": 3,
+      "totalCrops": 3
+    },
+    {
+      "levelId": "w1-robot-farm-1.7",
+      "seed": 10703,
+      "totalTicks": 11,
+      "terminalHash": "c32b73da992eacc8",
+      "cropsHarvested": 3,
+      "totalCrops": 3
+    },
+    {
+      "levelId": "w1-robot-farm-1.7",
+      "seed": 10704,
+      "totalTicks": 12,
+      "terminalHash": "209e99d35e74936b",
+      "cropsHarvested": 3,
+      "totalCrops": 3
+    },
+    {
+      "levelId": "w1-robot-farm-1.7",
+      "seed": 10705,
+      "totalTicks": 12,
+      "terminalHash": "a34177d2ffaf6ed6",
+      "cropsHarvested": 3,
+      "totalCrops": 3
+    },
+    {
+      "levelId": "w1-robot-farm-1.8",
+      "seed": 10801,
+      "totalTicks": 22,
+      "terminalHash": "4f13884397039d00",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.8",
+      "seed": 10802,
+      "totalTicks": 26,
+      "terminalHash": "958c79d22f31b7f5",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.8",
+      "seed": 10803,
+      "totalTicks": 20,
+      "terminalHash": "742591c46251c130",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.8",
+      "seed": 10804,
+      "totalTicks": 20,
+      "terminalHash": "798dbc7b065491df",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.8",
+      "seed": 10805,
+      "totalTicks": 22,
+      "terminalHash": "11fccc0e725312aa",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.9",
+      "seed": 10901,
+      "totalTicks": 29,
+      "terminalHash": "8fd2ec3799631419",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.9",
+      "seed": 10902,
+      "totalTicks": 31,
+      "terminalHash": "74cd0ac3c1cfe7bd",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.9",
+      "seed": 10903,
+      "totalTicks": 29,
+      "terminalHash": "f20aef0aa657bf60",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.9",
+      "seed": 10904,
+      "totalTicks": 29,
+      "terminalHash": "15799b742f3e713e",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.9",
+      "seed": 10905,
+      "totalTicks": 29,
+      "terminalHash": "4d133239a4aa4136",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.10",
+      "seed": 11001,
+      "totalTicks": 46,
+      "terminalHash": "6310fedc575e4f6a",
+      "cropsHarvested": 12,
+      "totalCrops": 12
+    },
+    {
+      "levelId": "w1-robot-farm-1.10",
+      "seed": 11002,
+      "totalTicks": 43,
+      "terminalHash": "fe871000b8c1345d",
+      "cropsHarvested": 11,
+      "totalCrops": 11
+    },
+    {
+      "levelId": "w1-robot-farm-1.10",
+      "seed": 11003,
+      "totalTicks": 56,
+      "terminalHash": "27be3ac45b62437e",
+      "cropsHarvested": 16,
+      "totalCrops": 16
+    },
+    {
+      "levelId": "w1-robot-farm-1.10",
+      "seed": 11004,
+      "totalTicks": 36,
+      "terminalHash": "24424433fdc2de58",
+      "cropsHarvested": 9,
+      "totalCrops": 9
+    },
+    {
+      "levelId": "w1-robot-farm-1.10",
+      "seed": 11005,
+      "totalTicks": 39,
+      "terminalHash": "6fe15d9821eac94e",
+      "cropsHarvested": 11,
+      "totalCrops": 11
+    },
+    {
+      "levelId": "w1-robot-farm-1.11",
+      "seed": 11101,
+      "totalTicks": 48,
+      "terminalHash": "a59efeb76958e368",
+      "cropsHarvested": 12,
+      "totalCrops": 12
+    },
+    {
+      "levelId": "w1-robot-farm-1.11",
+      "seed": 11102,
+      "totalTicks": 48,
+      "terminalHash": "e03b322803913262",
+      "cropsHarvested": 10,
+      "totalCrops": 10
+    },
+    {
+      "levelId": "w1-robot-farm-1.11",
+      "seed": 11103,
+      "totalTicks": 32,
+      "terminalHash": "e420ab38b7e0368f",
+      "cropsHarvested": 6,
+      "totalCrops": 6
+    },
+    {
+      "levelId": "w1-robot-farm-1.11",
+      "seed": 11104,
+      "totalTicks": 38,
+      "terminalHash": "c3cf5f110fa8d012",
+      "cropsHarvested": 8,
+      "totalCrops": 8
+    },
+    {
+      "levelId": "w1-robot-farm-1.11",
+      "seed": 11105,
+      "totalTicks": 29,
+      "terminalHash": "311d3868114ed1a5",
+      "cropsHarvested": 4,
+      "totalCrops": 4
+    },
+    {
+      "levelId": "w1-robot-farm-1.12",
+      "seed": 11201,
+      "totalTicks": 70,
+      "terminalHash": "d0c073e38931244e",
+      "cropsHarvested": 12,
+      "totalCrops": 12
+    },
+    {
+      "levelId": "w1-robot-farm-1.12",
+      "seed": 11202,
+      "totalTicks": 55,
+      "terminalHash": "5a2584cbcbc74cb9",
+      "cropsHarvested": 10,
+      "totalCrops": 10
+    },
+    {
+      "levelId": "w1-robot-farm-1.12",
+      "seed": 11203,
+      "totalTicks": 66,
+      "terminalHash": "76a87df75a8f3dff",
+      "cropsHarvested": 11,
+      "totalCrops": 11
+    },
+    {
+      "levelId": "w1-robot-farm-1.12",
+      "seed": 11204,
+      "totalTicks": 76,
+      "terminalHash": "92d50aad8f4ed226",
+      "cropsHarvested": 11,
+      "totalCrops": 11
+    },
+    {
+      "levelId": "w1-robot-farm-1.12",
+      "seed": 11205,
+      "totalTicks": 59,
+      "terminalHash": "88ec04261a431998",
+      "cropsHarvested": 11,
+      "totalCrops": 11
+    }
+  ]
+}

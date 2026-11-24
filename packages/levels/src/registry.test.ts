@@ -42,17 +42,45 @@ describe('level registry', () => {
     expect(await loadLevelBundle('unknown-level')).toBeUndefined();
   });
 
-  it('lists all registered level manifests', () => {
+  it('lists all 12 registered Robot Farm level manifests in ascending order', async () => {
     const manifests = getAllLevelManifests();
-    expect(manifests).toHaveLength(1);
-    expect(manifests[0]?.id).toBe('w1-robot-farm-1.1');
+    expect(manifests).toHaveLength(12);
+    expect(manifests.map((m) => m.id)).toEqual([
+      'w1-robot-farm-1.1',
+      'w1-robot-farm-1.2',
+      'w1-robot-farm-1.3',
+      'w1-robot-farm-1.4',
+      'w1-robot-farm-1.5',
+      'w1-robot-farm-1.6',
+      'w1-robot-farm-1.7',
+      'w1-robot-farm-1.8',
+      'w1-robot-farm-1.9',
+      'w1-robot-farm-1.10',
+      'w1-robot-farm-1.11',
+      'w1-robot-farm-1.12',
+    ]);
+
+    for (const manifest of manifests) {
+      const bundle = await loadLevelBundle(manifest.id);
+      expect(bundle).toBeDefined();
+      const parsed = LevelBundleSchema.safeParse(bundle);
+      expect(parsed.success, `Schema check failed for ${manifest.id}`).toBe(true);
+      expect(manifest.supportedModes).toEqual(['explorer', 'builder', 'hacker']);
+      expect(manifest.seeds).toHaveLength(5);
+      expect(manifest.simplificationLabel).toMatch(/^Simplified: /);
+      expect(manifest.parsonsBlocks?.filter((b) => b.isDistractor).length).toBeGreaterThanOrEqual(
+        2,
+      );
+      expect(manifest.blocklyToolbox).toBeDefined();
+      expect(bundle!.lessonContentMarkdown.length).toBeGreaterThan(100);
+    }
   });
 
-  it('resolves sequential next level IDs', () => {
+  it('resolves sequential next level IDs across 1.1 through 1.12', () => {
     expect(getNextLevelId('w1-robot-farm-1.1')).toBe('w1-robot-farm-1.2');
-    expect(getNextLevelId('w1-robot-farm-1.2')).toBe('w1-robot-farm-1.3');
-    expect(getNextLevelId('w1-robot-farm-1.4')).toBe('w1-robot-farm-1.5');
-    expect(getNextLevelId('w1-robot-farm-1.5')).toBeUndefined();
+    expect(getNextLevelId('w1-robot-farm-1.5')).toBe('w1-robot-farm-1.6');
+    expect(getNextLevelId('w1-robot-farm-1.11')).toBe('w1-robot-farm-1.12');
+    expect(getNextLevelId('w1-robot-farm-1.12')).toBeUndefined();
     expect(getNextLevelId('nonexistent')).toBeUndefined();
   });
 });
@@ -63,7 +91,7 @@ describe('DAG unlock logic', () => {
     expect(isLevelUnlocked('w1-robot-farm-1.1', new Set())).toBe(true);
   });
 
-  it('chains w1-robot-farm-1.2 through 1.5 sequentially', () => {
+  it('chains w1-robot-farm-1.2 through 1.12 sequentially', () => {
     expect(isLevelUnlocked('w1-robot-farm-1.2', new Set())).toBe(false);
     expect(isLevelUnlocked('w1-robot-farm-1.2', new Set(['w1-robot-farm-1.1']))).toBe(true);
 
@@ -72,8 +100,8 @@ describe('DAG unlock logic', () => {
       isLevelUnlocked('w1-robot-farm-1.3', new Set(['w1-robot-farm-1.1', 'w1-robot-farm-1.2'])),
     ).toBe(true);
 
-    expect(isLevelUnlocked('w1-robot-farm-1.5', new Set(['w1-robot-farm-1.4']))).toBe(true);
-    expect(isLevelUnlocked('w1-robot-farm-1.5', new Set(['w1-robot-farm-1.3']))).toBe(false);
+    expect(isLevelUnlocked('w1-robot-farm-1.12', new Set(['w1-robot-farm-1.11']))).toBe(true);
+    expect(isLevelUnlocked('w1-robot-farm-1.12', new Set(['w1-robot-farm-1.10']))).toBe(false);
   });
 
   it('returns false for unknown level IDs', () => {
