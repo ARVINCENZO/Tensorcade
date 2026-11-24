@@ -60,4 +60,35 @@ describe('AstInspector', () => {
     expect(result.valid).toBe(false);
     expect(result.violations[0]?.rule).toBe('MISSING_REQUIRED_FUNCTION_COSINE_SIMILARITY');
   });
+
+  it('enforces requiredConstructs, maxActionCalls, and minFunctionParams and formats DiagnosticError', () => {
+    const hardcoded = 'step()\nstep()\nstep()\nharvest()\n';
+    const loopRes = AstInspector.inspect(hardcoded, {
+      requiredConstructs: ['for'],
+      maxActionCalls: { step: 2 },
+    });
+    expect(loopRes.valid).toBe(false);
+    expect(loopRes.violations.some((v) => v.rule === 'MISSING_REQUIRED_CONSTRUCT_FOR')).toBe(true);
+    expect(loopRes.violations.some((v) => v.rule === 'MAX_ACTION_CALLS_STEP')).toBe(true);
+
+    const diag = AstInspector.toDiagnosticError(loopRes.violations, hardcoded);
+    expect(diag.errorType).toBe('ConstraintViolation');
+    expect(diag.whereItOccurred.line).toBe(1);
+    expect(diag.whatHappened.length).toBeGreaterThan(10);
+
+    const noParamFn = 'def harvest_plot():\n    step()\n    return 1\n';
+    const paramFail = AstInspector.inspect(noParamFn, {
+      requiredConstructs: ['def', 'return'],
+      minFunctionParams: 1,
+    });
+    expect(paramFail.valid).toBe(false);
+    expect(paramFail.violations[0]?.rule).toBe('MIN_FUNCTION_PARAMS');
+
+    const withParamFn = 'def harvest_plot(length):\n    step()\n    return length\n';
+    const paramPass = AstInspector.inspect(withParamFn, {
+      requiredConstructs: ['def', 'return'],
+      minFunctionParams: 1,
+    });
+    expect(paramPass.valid).toBe(true);
+  });
 });

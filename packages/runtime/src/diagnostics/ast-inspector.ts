@@ -8,7 +8,12 @@
  * - Validates required functions and constructs.
  */
 
-import type { AstConstraints, AstInspectionResult, AstViolation } from '@tensorcade/contracts';
+import type {
+  AstConstraints,
+  AstInspectionResult,
+  AstViolation,
+  DiagnosticError,
+} from '@tensorcade/contracts';
 
 /**
  * Strips comments and string literals to prevent false positives when searching for tokens.
@@ -97,9 +102,113 @@ export class AstInspector {
       }
     }
 
+    // 4. Check Required Constructs (e.g. 'for', 'while', 'if', 'elif', 'else', 'def', 'return', 'and', 'len')
+    if (constraints.requiredConstructs && constraints.requiredConstructs.length > 0) {
+      for (const construct of constraints.requiredConstructs) {
+        const constructRegex = new RegExp(`\\b${construct}\\b`);
+        const found = cleanedLines.some((line) => constructRegex.test(line));
+        if (!found) {
+          violations.push({
+            rule: `MISSING_REQUIRED_CONSTRUCT_${construct.toUpperCase()}`,
+            line: 1,
+            message: `This level requires using Python construct "${construct}" rather than a hardcoded workaround.`,
+          });
+        }
+      }
+    }
+
+    // 5. Check Maximum Direct Action Calls (prevents copy-pasting literal step() chains instead of loops)
+    if (constraints.maxActionCalls) {
+      for (const [fnName, maxAllowed] of Object.entries(constraints.maxActionCalls)) {
+        const callRegex = new RegExp(`\\b${fnName}\\s*\\(`, 'g');
+        const defRegex = new RegExp(`^\\s*def\\s+${fnName}\\s*\\(`);
+        let callCount = 0;
+        let firstExceedingLine = 1;
+        for (let i = 0; i < cleanedLines.length; i++) {
+          const line = cleanedLines[i] ?? '';
+          if (defRegex.test(line)) continue;
+          const matches = line.match(callRegex);
+          if (matches) {
+            for (let m = 0; m < matches.length; m++) {
+              callCount++;
+              if (callCount === maxAllowed + 1) {
+                firstExceedingLine = i + 1;
+              }
+            }
+          }
+        }
+        if (callCount > maxAllowed) {
+          violations.push({
+            rule: `MAX_ACTION_CALLS_${fnName.toUpperCase()}`,
+            line: firstExceedingLine,
+            message: `Found ${callCount} calls to "${fnName}()" (limit: ${maxAllowed}). Use a loop or helper function instead of repeating calls.`,
+          });
+        }
+      }
+    }
+
+    // 6. Check Minimum Function Parameters (ensures def functions accept dynamic parameters)
+    if (constraints.minFunctionParams && constraints.minFunctionParams > 0) {
+      const defHeaderRegex = /^\s*def\s+[A-Za-z_]\w*\s*\(([^)]*)\)\s*:/;
+      let satisfiesMinParams = false;
+      let firstDefLine = 1;
+      for (let i = 0; i < cleanedLines.length; i++) {
+        const line = cleanedLines[i] ?? '';
+        const match = defHeaderRegex.exec(line);
+        if (match) {
+          if (firstDefLine === 1) firstDefLine = i + 1;
+          const rawParams = (match[1] ?? '').trim();
+          const params = rawParams
+            ? rawParams
+                .split(',')
+                .map((p) => p.trim())
+                .filter((p) => p.length > 0)
+            : [];
+          if (params.length >= constraints.minFunctionParams) {
+            satisfiesMinParams = true;
+            break;
+          }
+        }
+      }
+      if (!satisfiesMinParams) {
+        violations.push({
+          rule: 'MIN_FUNCTION_PARAMS',
+          line: firstDefLine,
+          message: `Define at least one reusable function with at least ${constraints.minFunctionParams} parameter(s) (e.g., def harvest_plot(length):).`,
+        });
+      }
+    }
+
     return {
       valid: violations.length === 0,
       violations,
+    };
+  }
+
+  /**
+   * Formats AST constraint violations into a 4-part pedagogical DiagnosticError for ErrorFeedbackPanel.
+   */
+  public static toDiagnosticError(
+    violations: ReadonlyArray<AstViolation>,
+    sourceCode: string,
+  ): DiagnosticError {
+    const primary = violations[0];
+    const line = primary?.line ?? 1;
+    const rawLines = sourceCode.split('\n');
+    const sourceSnippet = rawLines[Math.max(0, line - 1)] ?? '';
+    const summaryList = violations.map((v) => `Line ${v.line}: ${v.message}`).join(' ');
+
+    return {
+      errorType: 'ConstraintViolation',
+      whatHappened: primary?.message ?? 'Submission did not meet the level code constraints.',
+      whereItOccurred: {
+        line,
+        column: 1,
+        sourceSnippet,
+      },
+      whyItMatters:
+        'This level is designed to practice a specific Python construct so your algorithm generalizes across unseen inputs rather than hardcoding a single case.',
+      whatToInvestigate: `Review the level requirement and update your code: ${summaryList}`,
     };
   }
 }
