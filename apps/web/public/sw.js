@@ -9,7 +9,7 @@
 
 const CACHE_NAME = 'tensorcade-pyodide-v314.0.8';
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (_event) => {
   self.skipWaiting();
 });
 

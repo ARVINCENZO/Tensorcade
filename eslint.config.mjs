@@ -328,6 +328,18 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'error',
     },
   },
+  // Service workers use browser globals that are outside the standard Node/DOM globals.
+  {
+    files: ['apps/web/public/**/*.js'],
+    languageOptions: {
+      globals: {
+        caches: 'readonly',
+        fetch: 'readonly',
+        self: 'readonly',
+        URL: 'readonly',
+      },
+    },
+  },
   // Simulation Engine determinism enforcement
   {
     files: ['packages/engine/**/*.{ts,tsx,js,mjs}'],
