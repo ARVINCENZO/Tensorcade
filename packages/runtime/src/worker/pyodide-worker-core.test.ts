@@ -94,23 +94,28 @@ describe('PyodideWorkerCore', () => {
     const buffer = new SharedArrayBuffer(4);
     core.setInterruptBuffer(buffer);
 
-    // Spawn a background thread to set SIGINT flag after 100ms
+    // Spawn a background thread that repeatedly asserts SIGINT until terminated,
+    // preventing race conditions on contended CI runners if initial setup exceeds 100ms.
     const thread = new ThreadWorker(
-      'const { workerData } = require("node:worker_threads"); const view = new Int32Array(workerData); setTimeout(() => { Atomics.store(view, 0, 2); }, 100);',
+      'const { workerData } = require("node:worker_threads"); const view = new Int32Array(workerData); setTimeout(() => { Atomics.store(view, 0, 2); setInterval(() => { Atomics.store(view, 0, 2); }, 50); }, 100);',
       { eval: true, workerData: buffer },
     );
 
     const startTime = Date.now();
-    const response = await core.executeCode({
-      code: 'while True:\n    pass\n',
-      levelId: 'w1-robot-farm-1.1',
-      seed: 42,
-      timeoutMs: 5000,
-      mockEnv: {},
-    });
+    let response;
+    try {
+      response = await core.executeCode({
+        code: 'while True:\n    pass\n',
+        levelId: 'w1-robot-farm-1.1',
+        seed: 42,
+        timeoutMs: 5000,
+        mockEnv: {},
+      });
+    } finally {
+      await thread.terminate();
+    }
 
     const elapsed = Date.now() - startTime;
-    await thread.terminate();
 
     expect(response.success).toBe(false);
     expect(response.diagnosticError).toBeDefined();

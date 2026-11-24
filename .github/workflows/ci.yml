@@ -25,6 +25,7 @@ jobs:
   lint:
     name: Lint & Code Quality
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -53,6 +54,7 @@ jobs:
   typecheck:
     name: TypeScript Check (tsc -b)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -78,6 +80,7 @@ jobs:
   unit-tests:
     name: Unit & Contract Tests (Vitest)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -106,6 +109,7 @@ jobs:
   build:
     name: Monorepo Build (Turborepo)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -131,6 +135,7 @@ jobs:
   storybook-build:
     name: Storybook Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -156,6 +161,7 @@ jobs:
   vrt:
     name: Playwright Visual Regression Testing (Pinned Docker Container)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     container:
       image: mcr.microsoft.com/playwright:v1.49.1-jammy
     steps:
@@ -201,6 +207,7 @@ jobs:
   axe-core:
     name: axe-core Accessibility Audit (Pinned Docker Container)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     container:
       image: mcr.microsoft.com/playwright:v1.49.1-jammy
     steps:
@@ -233,6 +240,7 @@ jobs:
   lighthouse:
     name: Lighthouse CI (Mobile Performance & Accessibility)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -261,6 +269,7 @@ jobs:
   bundle-size:
     name: Bundle Size Budget Check (<= 250 KB gzip)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -289,6 +298,7 @@ jobs:
   dependency-audit:
     name: Security & Dependency Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
