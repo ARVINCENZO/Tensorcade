@@ -118,6 +118,13 @@ export class TokenSpriteAtlas {
     ctx.fillRect(11, 13, 3, 1);
     ctx.fillRect(13, 11, 1, 3);
 
+    // Central geometric recharge emblem (distinct shape + token palette)
+    ctx.fillStyle = colors.accent.emerald; // #10B981
+    ctx.fillRect(7, 4, 2, 8);
+    ctx.fillRect(4, 7, 8, 2);
+    ctx.fillStyle = colors.text.primary; // #F8FAFC
+    ctx.fillRect(7, 7, 2, 2);
+
     return this.finalizeTexture(canvas);
   }
 

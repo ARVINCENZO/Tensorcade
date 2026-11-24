@@ -101,6 +101,22 @@ describe('ReplayViewer', () => {
     expect(html).toContain('Rock collision');
   });
 
+  it('humanizes engine crash codes, renders Recharge Base label, and disables pulse in reducedMotion', () => {
+    const state = createMockGridWorldState(1, 0, Direction.EAST);
+    state.grid[0]![1] = CellType.BASE;
+    state.crashed = true;
+    state.crashReason = 'ENERGY_DEPLETED';
+    const s0 = createSnapshot(state, 14);
+
+    const html = renderToStaticMarkup(
+      <ReplayViewer snapshots={[s0]} config={{ width: 4, height: 4, reducedMotion: true }} />,
+    );
+
+    expect(html).toContain('Battery energy depleted before completing harvest');
+    expect(html).toContain('Recharge Base');
+    expect(html).not.toContain('animate-pulse');
+  });
+
   it('respects controlled tickIndex and speed props', () => {
     const s0 = createSnapshot(createMockGridWorldState(0, 0, Direction.NORTH), 0);
     const s1 = createSnapshot(createMockGridWorldState(1, 0, Direction.EAST), 1);

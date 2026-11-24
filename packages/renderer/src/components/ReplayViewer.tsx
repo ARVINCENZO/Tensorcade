@@ -72,8 +72,25 @@ const CELL_TYPE_NAMES: Record<number, string> = {
   [CellType.CROP]: 'Crop',
   [CellType.ROCK]: 'Rock',
   [CellType.RAVINE]: 'Ravine',
-  [CellType.BASE]: 'Base',
+  [CellType.BASE]: 'Recharge Base',
 };
+
+export function formatCrashReason(reason?: string): string {
+  switch (reason) {
+    case 'COLLIDED_WITH_ROCK':
+      return 'Collided with rock obstacle';
+    case 'CRASHED_INTO_RAVINE':
+      return 'Fell into ravine hazard';
+    case 'ENERGY_DEPLETED':
+      return 'Battery energy depleted before completing harvest';
+    case 'OUT_OF_BOUNDS_COLLISION':
+      return 'Moved outside farm perimeter bounds';
+    case 'MULTIPLE_ACTIONS_PER_TICK':
+      return 'Multiple conflicting actions submitted on one tick';
+    default:
+      return reason ?? 'Hazard impact';
+  }
+}
 
 export const ReplayViewer: React.FC<ReplayViewerProps> = ({
   snapshots,
@@ -346,8 +363,11 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
               </span>
             </span>
             {state.crashed && (
-              <span className="text-[var(--tc-accent-crimson,#FB7185)] font-bold animate-pulse">
-                [CRASHED]
+              <span
+                className={`text-[var(--tc-accent-crimson,#FB7185)] font-bold${reducedMotion ? '' : ' animate-pulse'}`}
+                title={formatCrashReason(state.crashReason)}
+              >
+                [CRASHED] {formatCrashReason(state.crashReason)}
               </span>
             )}
           </div>
@@ -366,7 +386,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
               Tick {safeIndex} of {totalTicks}. Rover positioned at column {state.rover.x + 1}, row{' '}
               {state.rover.y + 1}, facing {headingText}. Energy: {state.rover.energy} percent.
               Harvested {state.cropsHarvested} of {state.totalCropsInitial} crops.
-              {state.crashed ? ` Vehicle crashed: ${state.crashReason ?? 'Hazard impact'}.` : ''}
+              {state.crashed ? ` Vehicle crashed: ${formatCrashReason(state.crashReason)}.` : ''}
             </p>
             <table>
               <caption>Simulation Field Grid State</caption>
@@ -376,7 +396,9 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
                     {row.map((cell, cIdx) => (
                       <td key={cIdx}>
                         {state.rover.x === cIdx && state.rover.y === rIdx
-                          ? `Rover (${headingText})`
+                          ? cell !== CellType.EMPTY
+                            ? `Rover (${headingText}) on ${CELL_TYPE_NAMES[cell] ?? 'Tile'}`
+                            : `Rover (${headingText})`
                           : (CELL_TYPE_NAMES[cell] ?? 'Empty')}
                       </td>
                     ))}

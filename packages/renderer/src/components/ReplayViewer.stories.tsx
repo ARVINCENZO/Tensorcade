@@ -112,3 +112,57 @@ export const HazardCrash: Story = {
     levelTitle: 'Hazard Collision Demonstration',
   },
 };
+
+export const ReducedMotion: Story = {
+  args: {
+    snapshots: createLevelSnapshots(),
+    config: {
+      width: 6,
+      height: 6,
+      tileSize: 16,
+      reducedMotion: true,
+    },
+    levelTitle: 'Robot Farm 1.9: Battery Relay (Reduced Motion)',
+  },
+};
+
+export const EnergyDepleted: Story = {
+  args: {
+    snapshots: [
+      {
+        tick: 14,
+        stateHash: 77777n,
+        stateHashHex: '0000000000012fd1',
+        prngState: 10901,
+        state: {
+          width: 6,
+          height: 6,
+          rover: {
+            x: 3,
+            y: 1,
+            heading: Direction.EAST,
+            energy: 0,
+            maxEnergy: 16,
+            inventory: 2,
+          },
+          grid: Array.from({ length: 6 }, (_, y) =>
+            Array.from({ length: 6 }, (_, x) =>
+              x === 5 && y === 1 ? (CellType.BASE as number) : (CellType.EMPTY as number),
+            ),
+          ),
+          totalCropsInitial: 6,
+          cropsHarvested: 2,
+          crashed: true,
+          crashReason: 'ENERGY_DEPLETED',
+        },
+      },
+    ],
+    config: {
+      width: 6,
+      height: 6,
+      tileSize: 16,
+      reducedMotion: true,
+    },
+    levelTitle: 'Robot Farm 1.9: Battery Depleted',
+  },
+};
