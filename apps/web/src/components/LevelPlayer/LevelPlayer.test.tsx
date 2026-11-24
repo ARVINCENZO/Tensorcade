@@ -3,8 +3,8 @@ import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { LEVEL_1_1_BUNDLE, LEVEL_1_1_MANIFEST } from '@tensorcade/levels';
-import { Direction, RobotFarmSimulation } from '@tensorcade/engine';
+import { LEVEL_1_1_BUNDLE, LEVEL_1_1_MANIFEST, LEVEL_1_3_MANIFEST } from '@tensorcade/levels';
+import { Direction, RobotFarmSimulation, resolveGridWorldConfig } from '@tensorcade/engine';
 import { LevelControlsBar } from './LevelControlsBar.js';
 import {
   LevelPlayer,
@@ -295,5 +295,86 @@ describe('LevelControlsBar & LevelPlayer', () => {
 
     await expect(pendingRunner).rejects.toThrow(/unmounted/i);
     expect(terminateCount).toBe(1);
+  });
+
+  it('rejects AST constraint violations prior to Pyodide execution with 4-part DiagnosticError', async () => {
+    let pyodideCalled = false;
+    const evaluation = await evaluateLevelSeeds({
+      manifest: LEVEL_1_3_MANIFEST,
+      code: 'step()\nstep()\nstep()\nharvest()\n',
+      mode: 'hacker',
+      hintTierReached: 0,
+      runPython: async () => {
+        pyodideCalled = true;
+        return { success: true, executionTimeMs: 1, stdout: '', stderr: '' };
+      },
+      makeSimulation: (config) => new RobotFarmSimulation(config),
+      inspectAst: () => ({
+        valid: false,
+        violations: [
+          {
+            rule: 'MISSING_REQUIRED_CONSTRUCT_FOR',
+            line: 1,
+            message: 'This level requires using Python construct "for".',
+          },
+        ],
+      }),
+    });
+
+    expect(pyodideCalled).toBe(false);
+    expect(evaluation.result.passed).toBe(false);
+    expect(evaluation.diagnosticError?.errorType).toBe('ConstraintViolation');
+    expect(evaluation.diagnosticError?.whereItOccurred.line).toBe(1);
+  });
+
+  it('selects the first failing seed for replay and humanizes crash telemetry', async () => {
+    const evaluation = await evaluateLevelSeeds({
+      manifest: LEVEL_1_3_MANIFEST,
+      code: 'for _ in range(4):\n    step()\n    harvest()\n',
+      mode: 'hacker',
+      hintTierReached: 0,
+      resolveConfig: (m, seed) =>
+        resolveGridWorldConfig(
+          m.id,
+          m.environmentConfig,
+          seed,
+          60,
+          m.scoringRubric.star2.threshold,
+        ),
+      runPython: async (req) => ({
+        success: true,
+        executionTimeMs: 2,
+        stdout: '',
+        stderr: '',
+        actionTrace: {
+          version: '1.0.0',
+          levelId: req.levelId,
+          mode: 'hacker',
+          seed: req.seed,
+          totalTicks: 8,
+          actions: [
+            { tick: 1, type: 'STEP', params: {} },
+            { tick: 2, type: 'HARVEST', params: {} },
+            { tick: 3, type: 'STEP', params: {} },
+            { tick: 4, type: 'HARVEST', params: {} },
+            { tick: 5, type: 'STEP', params: {} },
+            { tick: 6, type: 'HARVEST', params: {} },
+            { tick: 7, type: 'STEP', params: {} },
+            { tick: 8, type: 'HARVEST', params: {} },
+          ],
+          clientTerminalHash: '0000000000000000',
+        },
+      }),
+      makeSimulation: (config) => new RobotFarmSimulation(config),
+    });
+
+    // Seed 0 (10301) has rowLength 4 -> passes; Seed 1 (10304) has rowLength 7 -> fails!
+    expect(evaluation.result.passed).toBe(false);
+    expect(evaluation.result.seedsPassed).toBe(1);
+    expect(evaluation.featuredSeedIndex).toBe(1);
+    expect(evaluation.seedReplays).toHaveLength(5);
+    expect(evaluation.seedReplays[0]?.passed).toBe(true);
+    expect(evaluation.seedReplays[1]?.passed).toBe(false);
+    expect(evaluation.result.message).toContain('Seed 2 (10304)');
   });
 });

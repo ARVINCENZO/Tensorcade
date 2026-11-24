@@ -1,5 +1,7 @@
 import * as React from 'react';
 import type {
+  AstConstraints,
+  AstInspectionResult,
   CodeExecutionRequest,
   CodeExecutionResponse,
   DiagnosticError,
@@ -151,6 +153,7 @@ interface RawRoverConfig {
   y?: number;
   heading?: string | number;
   energy?: number;
+  maxEnergy?: number;
 }
 
 interface RawPosition {
@@ -166,6 +169,23 @@ function parseDirection(heading: string | number | undefined): Direction {
   return 1;
 }
 
+function humanizeOutcomeMessage(message?: string): string | undefined {
+  switch (message) {
+    case 'COLLIDED_WITH_ROCK':
+      return 'Collided with rock obstacle';
+    case 'CRASHED_INTO_RAVINE':
+      return 'Fell into ravine hazard';
+    case 'ENERGY_DEPLETED':
+      return 'Battery energy depleted before completing harvest';
+    case 'OUT_OF_BOUNDS_COLLISION':
+      return 'Moved outside farm perimeter bounds';
+    case 'MULTIPLE_ACTIONS_PER_TICK':
+      return 'Multiple conflicting actions submitted on one tick';
+    default:
+      return message;
+  }
+}
+
 export function buildGridWorldConfig(manifest: LevelManifest, seed: number): GridWorldConfig {
   const env = manifest.environmentConfig;
   const rawRover = (env['initialRover'] as RawRoverConfig | undefined) ?? {};
@@ -175,10 +195,13 @@ export function buildGridWorldConfig(manifest: LevelManifest, seed: number): Gri
   const crops = Array.isArray(env['crops']) ? (env['crops'] as RawPosition[]) : [];
   const rocks = Array.isArray(env['rocks']) ? (env['rocks'] as RawPosition[]) : undefined;
   const ravines = Array.isArray(env['ravines']) ? (env['ravines'] as RawPosition[]) : undefined;
+  const bases = Array.isArray(env['bases']) ? (env['bases'] as RawPosition[]) : undefined;
   const star2TickThreshold =
     typeof env['star2TickThreshold'] === 'number'
       ? env['star2TickThreshold']
       : manifest.scoringRubric.star2.threshold;
+
+  const initialEnergy = typeof rawRover.energy === 'number' ? rawRover.energy : 100;
 
   return {
     levelId: manifest.id,
@@ -190,11 +213,13 @@ export function buildGridWorldConfig(manifest: LevelManifest, seed: number): Gri
       x: typeof rawRover.x === 'number' ? rawRover.x : 0,
       y: typeof rawRover.y === 'number' ? rawRover.y : 0,
       heading: parseDirection(rawRover.heading),
-      energy: typeof rawRover.energy === 'number' ? rawRover.energy : 100,
+      energy: initialEnergy,
+      maxEnergy: typeof rawRover.maxEnergy === 'number' ? rawRover.maxEnergy : initialEnergy,
     },
     crops,
     ...(rocks ? { rocks } : {}),
     ...(ravines ? { ravines } : {}),
+    ...(bases ? { bases } : {}),
     star2TickThreshold,
   };
 }
@@ -218,6 +243,10 @@ export function createInitialSnapshotFromManifest(
     const row = grid[ravine.y];
     if (row && ravine.x >= 0 && ravine.x < cfg.width) row[ravine.x] = 3;
   }
+  for (const base of cfg.bases ?? []) {
+    const row = grid[base.y];
+    if (row && base.x >= 0 && base.x < cfg.width) row[base.x] = 4;
+  }
 
   return {
     tick: 0,
@@ -232,6 +261,7 @@ export function createInitialSnapshotFromManifest(
         y: cfg.initialRover.y,
         heading: cfg.initialRover.heading,
         energy: cfg.initialRover.energy,
+        maxEnergy: cfg.initialRover.maxEnergy ?? cfg.initialRover.energy,
         inventory: 0,
       },
       grid,
@@ -258,12 +288,22 @@ function mapActionToRobotParams(action: {
     robotActionType = 'TURN_RIGHT';
   } else if (normalizedType === 'HARVEST') {
     robotActionType = 'HARVEST';
+  } else if (normalizedType === 'RECHARGE') {
+    robotActionType = 'RECHARGE';
   }
   return {
     tick: action.tick,
     type: robotActionType,
     params: { type: robotActionType },
   };
+}
+
+export interface SeedReplayEntry {
+  readonly seed: number;
+  readonly passed: boolean;
+  readonly ticks: number;
+  readonly message?: string | undefined;
+  readonly snapshots: EngineSnapshot<GridWorldState>[];
 }
 
 export interface EvaluateLevelSeedsInput {
@@ -273,11 +313,18 @@ export interface EvaluateLevelSeedsInput {
   readonly hintTierReached: HintTier;
   readonly runPython: (request: CodeExecutionRequest) => Promise<CodeExecutionResponse>;
   readonly makeSimulation: (config: GridWorldConfig) => SimulationLike;
+  /** Optional seeded layout resolver (defaults to static buildGridWorldConfig in unit tests). */
+  readonly resolveConfig?: ((manifest: LevelManifest, seed: number) => GridWorldConfig) | undefined;
+  /** Optional static AST inspector (enforced in browser runs prior to Pyodide execution). */
+  readonly inspectAst?:
+    ((code: string, constraints: AstConstraints) => AstInspectionResult) | undefined;
 }
 
 export interface EvaluateLevelSeedsOutput {
   readonly result: LevelResultSummary;
   readonly firstSeedSnapshots: EngineSnapshot<GridWorldState>[];
+  readonly seedReplays: ReadonlyArray<SeedReplayEntry>;
+  readonly featuredSeedIndex: number;
   readonly diagnosticError?: DiagnosticError | undefined;
   readonly firstActionTraceJson?: string | undefined;
   readonly firstTerminalHash?: string | undefined;
@@ -295,25 +342,73 @@ export async function evaluateLevelSeeds({
   hintTierReached,
   runPython,
   makeSimulation,
+  resolveConfig = buildGridWorldConfig,
+  inspectAst,
 }: EvaluateLevelSeedsInput): Promise<EvaluateLevelSeedsOutput> {
+  const defaultSnapshots = [createInitialSnapshotFromManifest(manifest)];
+
+  // 1. Static AST constraint check prior to sandbox execution
+  if (manifest.astConstraints && inspectAst) {
+    const astResult = inspectAst(code, manifest.astConstraints);
+    if (!astResult.valid && astResult.violations.length > 0) {
+      const primary = astResult.violations[0]!;
+      const line = primary.line;
+      const snippet = code.split('\n')[Math.max(0, line - 1)] ?? '';
+      const summary = astResult.violations.map((v) => `Line ${v.line}: ${v.message}`).join(' ');
+      const diagnosticError: DiagnosticError = {
+        errorType: 'ConstraintViolation',
+        whatHappened: primary.message,
+        whereItOccurred: { line, column: 1, sourceSnippet: snippet },
+        whyItMatters:
+          'This level practices a specific Python construct so your solution generalizes across unseen seeds rather than hardcoding.',
+        whatToInvestigate: `Update your code to satisfy the level requirement: ${summary}`,
+      };
+      return {
+        result: {
+          passed: false,
+          starsEarned: 0,
+          star1Earned: false,
+          star2Earned: false,
+          star3Earned: false,
+          ticks: 0,
+          energyRemaining: 0,
+          mode,
+          seedsPassed: 0,
+          totalSeeds: manifest.seeds.length,
+          message: primary.message,
+        },
+        firstSeedSnapshots: defaultSnapshots,
+        seedReplays: [],
+        featuredSeedIndex: 0,
+        diagnosticError,
+        maxTicksUsed: 0,
+      };
+    }
+  }
+
   let seedsPassed = 0;
   let maxTicksUsed = 0;
   let lastEnergyRemaining = 0;
-  let firstSeedSnapshots: EngineSnapshot<GridWorldState>[] = [
-    createInitialSnapshotFromManifest(manifest),
-  ];
+  let firstSeedSnapshots: EngineSnapshot<GridWorldState>[] = defaultSnapshots;
+  const seedReplays: SeedReplayEntry[] = [];
+  let firstFailingSeedIndex = -1;
+  let firstFailingMessage: string | undefined;
   let lastOutcomeMessage: string | undefined;
   let firstActionTraceJson: string | undefined;
   let firstTerminalHash: string | undefined;
 
   for (let idx = 0; idx < manifest.seeds.length; idx++) {
     const seed = manifest.seeds[idx]!;
+    const simConfig = resolveConfig(manifest, seed);
     const response = await runPython({
       code,
       levelId: manifest.id,
       seed,
       timeoutMs: 5000,
-      mockEnv: manifest.environmentConfig,
+      mockEnv: {
+        ...manifest.environmentConfig,
+        __gridWorld: simConfig,
+      },
     });
 
     if (!response.success || response.diagnosticError) {
@@ -332,12 +427,13 @@ export async function evaluateLevelSeeds({
           message: response.diagnosticError?.whatHappened ?? 'Execution failed.',
         },
         firstSeedSnapshots,
+        seedReplays,
+        featuredSeedIndex: 0,
         diagnosticError: response.diagnosticError,
         maxTicksUsed: 0,
       };
     }
 
-    const simConfig = buildGridWorldConfig(manifest, seed);
     const sim = makeSimulation(simConfig);
     const seedSnapshots: EngineSnapshot<GridWorldState>[] = [sim.getSnapshot()];
     const actions = response.actionTrace?.actions ?? [];
@@ -349,6 +445,18 @@ export async function evaluateLevelSeeds({
     }
 
     const outcome = sim.getOutcome();
+    const humanizedMsg = humanizeOutcomeMessage(outcome.message);
+    const seedTicks = outcome.terminalTick || seedSnapshots.length - 1;
+    const seedPassed = outcome.status === 'WON';
+
+    seedReplays.push({
+      seed,
+      passed: seedPassed,
+      ticks: seedTicks,
+      message: humanizedMsg,
+      snapshots: seedSnapshots,
+    });
+
     if (idx === 0) {
       firstSeedSnapshots = seedSnapshots;
       firstActionTraceJson = response.actionTrace
@@ -357,14 +465,19 @@ export async function evaluateLevelSeeds({
       firstTerminalHash = outcome.terminalHash;
     }
 
-    maxTicksUsed = Math.max(maxTicksUsed, outcome.terminalTick || seedSnapshots.length - 1);
+    if (!seedPassed && firstFailingSeedIndex === -1) {
+      firstFailingSeedIndex = idx;
+      firstFailingMessage = `Seed ${idx + 1} (${seed}): ${humanizedMsg ?? 'Not all crops harvested'} at tick ${seedTicks}.`;
+    }
+
+    maxTicksUsed = Math.max(maxTicksUsed, seedTicks);
     lastEnergyRemaining =
       typeof outcome.metrics['energyRemaining'] === 'number'
         ? outcome.metrics['energyRemaining']
         : 0;
-    lastOutcomeMessage = outcome.message;
+    lastOutcomeMessage = humanizedMsg;
 
-    if (outcome.status === 'WON') {
+    if (seedPassed) {
       seedsPassed += 1;
     }
   }
@@ -374,6 +487,7 @@ export async function evaluateLevelSeeds({
   const star2Earned = passed && maxTicksUsed <= manifest.scoringRubric.star2.threshold;
   const star3Earned = passed && star2Earned && mode === 'hacker' && hintTierReached === 0;
   const starsEarned: 0 | 1 | 2 | 3 = !star1Earned ? 0 : star3Earned ? 3 : star2Earned ? 2 : 1;
+  const featuredSeedIndex = firstFailingSeedIndex >= 0 ? firstFailingSeedIndex : 0;
 
   return {
     result: {
@@ -387,9 +501,11 @@ export async function evaluateLevelSeeds({
       mode,
       seedsPassed,
       totalSeeds: manifest.seeds.length,
-      message: lastOutcomeMessage,
+      message: passed ? lastOutcomeMessage : (firstFailingMessage ?? lastOutcomeMessage),
     },
-    firstSeedSnapshots,
+    firstSeedSnapshots: seedReplays[featuredSeedIndex]?.snapshots ?? firstSeedSnapshots,
+    seedReplays,
+    featuredSeedIndex,
     firstActionTraceJson,
     firstTerminalHash,
     maxTicksUsed,
@@ -444,10 +560,36 @@ export function LevelPlayer({
   const [snapshots, setSnapshots] = React.useState<ReadonlyArray<EngineSnapshot<GridWorldState>>>(
     () => [createInitialSnapshotFromManifest(manifest)],
   );
+  const [seedReplays, setSeedReplays] = React.useState<ReadonlyArray<SeedReplayEntry>>([]);
+  const [activeSeedIndex, setActiveSeedIndex] = React.useState<number>(0);
   const [currentTickIndex, setCurrentTickIndex] = React.useState<number>(0);
+  const initialSeed0SnapshotRef = React.useRef<EngineSnapshot<GridWorldState> | null>(null);
 
   const isRunningRef = React.useRef<boolean>(false);
   const runtimeLifecycleRef = React.useRef<RuntimeLifecycle | null>(null);
+
+  // Resolve exact seeded tick-0 snapshot via deterministic engine layout generator on mount
+  React.useEffect(() => {
+    let cancelled = false;
+    void import('@tensorcade/engine').then(({ resolveGridWorldConfig, RobotFarmSimulation }) => {
+      if (cancelled) return;
+      const seed0 = manifest.seeds[0] ?? 10001;
+      const cfg = resolveGridWorldConfig(
+        manifest.id,
+        manifest.environmentConfig,
+        seed0,
+        100,
+        manifest.scoringRubric.star2.threshold,
+      );
+      const sim = new RobotFarmSimulation(cfg);
+      const snap0 = sim.getSnapshot();
+      initialSeed0SnapshotRef.current = snap0;
+      setSnapshots((prev) => (prev.length <= 1 ? [snap0] : prev));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [manifest]);
 
   React.useEffect(() => {
     const lifecycle = createRuntimeLifecycle(async () => {
@@ -490,18 +632,29 @@ export function LevelPlayer({
     return runtimeLifecycleRef.current.getRunner(manifest.worldId);
   }, [executePython, manifest.worldId]);
 
-  const getSimulationFactory = React.useCallback(async (): Promise<
-    (config: GridWorldConfig) => SimulationLike
-  > => {
-    if (createSimulation) {
-      return createSimulation;
-    }
-    const { RobotFarmSimulation } = await import('@tensorcade/engine');
-    return (config) => new RobotFarmSimulation(config);
+  const getSimulationTools = React.useCallback(async (): Promise<{
+    makeSimulation: (config: GridWorldConfig) => SimulationLike;
+    resolveConfig: (m: LevelManifest, seed: number) => GridWorldConfig;
+  }> => {
+    const { RobotFarmSimulation, resolveGridWorldConfig } = await import('@tensorcade/engine');
+    return {
+      makeSimulation: createSimulation ?? ((config) => new RobotFarmSimulation(config)),
+      resolveConfig: (m, seed) =>
+        resolveGridWorldConfig(
+          m.id,
+          m.environmentConfig,
+          seed,
+          100,
+          m.scoringRubric.star2.threshold,
+        ),
+    };
   }, [createSimulation]);
 
   const handleInstantReset = React.useCallback(() => {
-    setSnapshots([createInitialSnapshotFromManifest(manifest)]);
+    const baseSnap = initialSeed0SnapshotRef.current ?? createInitialSnapshotFromManifest(manifest);
+    setSnapshots([baseSnap]);
+    setSeedReplays([]);
+    setActiveSeedIndex(0);
     setCurrentTickIndex(0);
     setDiagnosticError(undefined);
     setRuntimeError(null);
@@ -541,8 +694,11 @@ export function LevelPlayer({
 
       try {
         await recordAttempt(manifest.id, manifest.worldId);
-        const runPython = await getRuntimeRunner();
-        const makeSimulation = await getSimulationFactory();
+        const [runPython, { makeSimulation, resolveConfig }, runtimeMod] = await Promise.all([
+          getRuntimeRunner(),
+          getSimulationTools(),
+          import('@tensorcade/runtime'),
+        ]);
 
         const evaluation = await evaluateLevelSeeds({
           manifest,
@@ -551,6 +707,8 @@ export function LevelPlayer({
           hintTierReached,
           runPython,
           makeSimulation,
+          resolveConfig,
+          inspectAst: (src, constraints) => runtimeMod.AstInspector.inspect(src, constraints),
         });
 
         if (evaluation.diagnosticError) {
@@ -565,6 +723,8 @@ export function LevelPlayer({
           return;
         }
 
+        setSeedReplays(evaluation.seedReplays);
+        setActiveSeedIndex(evaluation.featuredSeedIndex);
         setSnapshots(evaluation.firstSeedSnapshots);
         setCurrentTickIndex(evaluation.firstSeedSnapshots.length - 1);
 
@@ -607,7 +767,7 @@ export function LevelPlayer({
     [
       code,
       getRuntimeRunner,
-      getSimulationFactory,
+      getSimulationTools,
       hintTierReached,
       manifest,
       mode,
@@ -640,9 +800,24 @@ export function LevelPlayer({
   );
 
   const envConfig = manifest.environmentConfig;
-  const gridWidth = typeof envConfig['width'] === 'number' ? envConfig['width'] : 4;
-  const gridHeight = typeof envConfig['height'] === 'number' ? envConfig['height'] : 4;
+  const activeSnapState =
+    snapshots[Math.min(currentTickIndex, Math.max(0, snapshots.length - 1))]?.state;
+  const gridWidth =
+    activeSnapState?.width ?? (typeof envConfig['width'] === 'number' ? envConfig['width'] : 4);
+  const gridHeight =
+    activeSnapState?.height ?? (typeof envConfig['height'] === 'number' ? envConfig['height'] : 4);
   const nextLevelId = getNextLevelId(manifest.id);
+
+  const handleSelectSeedReplay = React.useCallback(
+    (seedIdx: number) => {
+      const entry = seedReplays[seedIdx];
+      if (!entry) return;
+      setActiveSeedIndex(seedIdx);
+      setSnapshots(entry.snapshots);
+      setCurrentTickIndex(entry.snapshots.length - 1);
+    },
+    [seedReplays],
+  );
 
   const replayConfig = React.useMemo(
     () => ({
@@ -719,6 +894,43 @@ export function LevelPlayer({
           aria-label="Simulation Viewport"
           className={isLessonOpen ? 'lg:col-span-4' : 'lg:col-span-6'}
         >
+          {seedReplays.length > 0 && (
+            <div
+              role="group"
+              aria-label="Evaluation seed selector"
+              className="mb-2 flex flex-wrap items-center gap-1.5 rounded-[var(--tc-radius-sm)] border border-[var(--tc-border-subtle)] bg-[var(--tc-bg-surface)] px-2.5 py-1.5 font-mono text-xs"
+            >
+              <span className="text-[var(--tc-text-muted)]">Seeds:</span>
+              {seedReplays.map((entry, idx) => {
+                const isActive = idx === activeSeedIndex;
+                return (
+                  <button
+                    key={entry.seed}
+                    type="button"
+                    aria-pressed={isActive}
+                    aria-label={`Seed ${idx + 1} (${entry.seed}): ${entry.passed ? 'Passed' : 'Failed'}`}
+                    onClick={() => handleSelectSeedReplay(idx)}
+                    className={`rounded-[var(--tc-radius-sm)] border px-2 py-0.5 text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--tc-accent-cyan)] focus-visible:outline-offset-[var(--tc-focus-outline-offset)] ${
+                      isActive
+                        ? 'border-[var(--tc-accent-cyan)] bg-[var(--tc-bg-base)] font-semibold text-[var(--tc-accent-cyan)]'
+                        : 'border-[var(--tc-border-subtle)] bg-[var(--tc-bg-base)] text-[var(--tc-text-muted)] hover:text-[var(--tc-text-primary)]'
+                    }`}
+                  >
+                    S{idx + 1}{' '}
+                    <span
+                      className={
+                        entry.passed
+                          ? 'text-[var(--tc-accent-emerald)]'
+                          : 'text-[var(--tc-accent-crimson)]'
+                      }
+                    >
+                      {entry.passed ? 'PASS' : 'FAIL'}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <React.Suspense
             fallback={
               <div className="flex h-80 items-center justify-center rounded-[var(--tc-radius-md)] border border-[var(--tc-border-subtle)] bg-[var(--tc-bg-surface)] font-mono text-xs text-[var(--tc-text-muted)]">

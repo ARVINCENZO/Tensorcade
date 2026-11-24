@@ -106,6 +106,35 @@ jobs:
       - name: Run unit & contract tests
         run: pnpm test
 
+  level-validation:
+    name: Level Reference Solution Validation (Pyodide-in-Node)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }} (with pnpm cache)
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build level validator dependencies
+        run: pnpm --filter @tensorcade/level-validator... build
+
+      - name: Validate all registered level reference solutions across 5 seeds
+        run: pnpm --filter @tensorcade/level-validator run validate
+
   build:
     name: Monorepo Build (Turborepo)
     runs-on: ubuntu-latest
@@ -236,6 +265,11 @@ jobs:
         env:
           HOME: /root
         run: pnpm exec playwright test tests/e2e/axe.spec.ts
+
+      - name: Run Robot Farm E2E scripted playthrough
+        env:
+          HOME: /root
+        run: pnpm exec playwright test tests/e2e/robot-farm.spec.ts --project=chromium
 
   lighthouse:
     name: Lighthouse CI (Mobile Performance & Accessibility)
