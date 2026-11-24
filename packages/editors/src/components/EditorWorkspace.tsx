@@ -375,7 +375,7 @@ export function EditorWorkspace({
               title="Execute code (Ctrl+Enter / Cmd+Enter)"
             >
               <span>Run Code</span>
-              <kbd className="hidden sm:inline-block rounded px-1 text-[10px] bg-[var(--tc-bg-base)]/40 text-[var(--tc-text-primary)]">
+              <kbd className="hidden sm:inline-block rounded px-1 text-[10px] bg-[var(--tc-bg-base)] text-[var(--tc-accent-cyan)]">
                 Ctrl+↵
               </kbd>
             </Button>
