@@ -268,7 +268,7 @@ export function WorldMapLayout({
                                           <span className="flex items-center gap-2">
                                             {!unlocked && (
                                               <span className="text-[var(--tc-text-muted)]">
-                                                Locked
+                                                Locked{' '}
                                               </span>
                                             )}
                                             <span className="font-semibold">

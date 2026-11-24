@@ -175,7 +175,12 @@ export function LessonDrawer({
         )}
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div
+        role="region"
+        tabIndex={0}
+        aria-label="Lesson content"
+        className="flex-1 overflow-y-auto p-4 space-y-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--tc-accent-cyan)] focus-visible:outline-offset-0"
+      >
         {simplificationLabel && (
           <div
             role="note"

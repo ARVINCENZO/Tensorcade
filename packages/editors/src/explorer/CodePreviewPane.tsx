@@ -61,7 +61,12 @@ export function CodePreviewPane({
       </header>
 
       {/* Code Viewer Body */}
-      <div className="relative flex-1 overflow-auto p-3 font-mono text-xs leading-relaxed">
+      <div
+        role="region"
+        tabIndex={0}
+        aria-label="Generated Python code output"
+        className="relative flex-1 overflow-auto p-3 font-mono text-xs leading-relaxed focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--tc-accent-cyan)] focus-visible:outline-offset-0"
+      >
         <pre className="m-0 flex min-w-full">
           {/* Line Numbers Gutter */}
           <div
