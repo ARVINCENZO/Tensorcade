@@ -35,9 +35,15 @@ describe('Python Runtime Performance Benchmark', () => {
 
     expect(res2.success).toBe(true);
 
-    console.log(`[RUNTIME BENCHMARK] Cold Start: ${coldStartMs.toFixed(2)} ms (Budget: <= 8000 ms)`);
-    console.log(`[RUNTIME BENCHMARK] Warm First Run: ${warmExecutionMs.toFixed(2)} ms (Budget: <= 2000 ms)`);
-    console.log(`[RUNTIME BENCHMARK] Steady State Run: ${steadyStateMs.toFixed(2)} ms (Budget: <= 1500 ms)`);
+    console.log(
+      `[RUNTIME BENCHMARK] Cold Start: ${coldStartMs.toFixed(2)} ms (Budget: <= 8000 ms)`,
+    );
+    console.log(
+      `[RUNTIME BENCHMARK] Warm First Run: ${warmExecutionMs.toFixed(2)} ms (Budget: <= 2000 ms)`,
+    );
+    console.log(
+      `[RUNTIME BENCHMARK] Steady State Run: ${steadyStateMs.toFixed(2)} ms (Budget: <= 1500 ms)`,
+    );
 
     // Quality Bar Assertions
     expect(coldStartMs).toBeLessThan(8000);

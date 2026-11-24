@@ -28,7 +28,7 @@ export const DIRECTION_TO_RADIAN: Record<number, number> = {
  */
 export function shortestAngleDiff(target: number, source: number): number {
   const twoPi = 2 * Math.PI;
-  return (((target - source + Math.PI) % twoPi + twoPi) % twoPi) - Math.PI;
+  return ((((target - source + Math.PI) % twoPi) + twoPi) % twoPi) - Math.PI;
 }
 
 /**
@@ -43,7 +43,7 @@ export function interpolateGridWorld(
   prev: Readonly<GridWorldState>,
   curr: Readonly<GridWorldState>,
   alpha: number,
-  reducedMotion = false
+  reducedMotion = false,
 ): InterpolatedRoverState {
   const clampedAlpha = Math.min(Math.max(alpha, 0.0), 1.0);
 

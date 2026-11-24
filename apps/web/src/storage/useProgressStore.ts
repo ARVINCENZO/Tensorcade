@@ -28,7 +28,11 @@ export interface ProgressState {
   progress: Record<string, LevelProgressRecord>;
   hydrated: boolean;
   loadProgress: (db?: TensorcadeDb) => Promise<void>;
-  recordAttempt: (levelId: string, worldId: string, db?: TensorcadeDb) => Promise<LevelProgressRecord>;
+  recordAttempt: (
+    levelId: string,
+    worldId: string,
+    db?: TensorcadeDb,
+  ) => Promise<LevelProgressRecord>;
   recordHintViewed: (
     levelId: string,
     worldId: string,
@@ -142,7 +146,7 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
     providedDb?: TensorcadeDb,
   ): Promise<LevelProgressRecord> {
     const existing = get().progress[levelId] ?? createEmptyRecord(levelId, worldId);
-    const nextTier = (Math.max(existing.hintTierReached, tier) as 0 | 1 | 2 | 3);
+    const nextTier = Math.max(existing.hintTierReached, tier) as 0 | 1 | 2 | 3;
     const incoming: LevelProgressRecord = {
       ...existing,
       worldId: existing.worldId || worldId,

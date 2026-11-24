@@ -52,7 +52,7 @@ describe('DiagnosticErrorMapper', () => {
       '  File "<learner_code>", line 1',
       '    def foo()',
       '             ^',
-      'SyntaxError: expected \':\'',
+      "SyntaxError: expected ':'",
     ].join('\n');
 
     const error = DiagnosticErrorMapper.mapError(fakeTraceback, userCode);

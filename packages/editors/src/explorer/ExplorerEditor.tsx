@@ -64,7 +64,8 @@ export function ExplorerEditor({
     registerPythonGenerators();
 
     // Determine toolbox configuration
-    let toolboxConfig: Blockly.utils.toolbox.ToolboxDefinition | Element | string = defaultToolboxJson as unknown as Blockly.utils.toolbox.ToolboxDefinition;
+    let toolboxConfig: Blockly.utils.toolbox.ToolboxDefinition | Element | string =
+      defaultToolboxJson as unknown as Blockly.utils.toolbox.ToolboxDefinition;
     if (toolboxXml) {
       if (typeof toolboxXml === 'string') {
         const trimmed = toolboxXml.trim();
@@ -191,11 +192,7 @@ export function ExplorerEditor({
             </button>
           </div>
         ) : null}
-        <div
-          ref={blocklyDivRef}
-          className="h-full w-full"
-          data-testid="blockly-workspace-mount"
-        />
+        <div ref={blocklyDivRef} className="h-full w-full" data-testid="blockly-workspace-mount" />
       </div>
 
       {/* Right Pane: 40% Read-Only Live Python Code Preview */}
@@ -203,11 +200,7 @@ export function ExplorerEditor({
         className="flex h-full w-[40%] flex-col bg-[#0B0F17]"
         data-testid="code-preview-container"
       >
-        <CodePreviewPane
-          code={pythonCode}
-          onRun={onRun}
-          readOnly={readOnly}
-        />
+        <CodePreviewPane code={pythonCode} onRun={onRun} readOnly={readOnly} />
       </div>
     </div>
   );

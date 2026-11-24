@@ -6,9 +6,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../contracts" },
-    { "path": "../engine" },
-    { "path": "../ui" }
-  ]
+  "references": [{ "path": "../contracts" }, { "path": "../engine" }, { "path": "../ui" }]
 }

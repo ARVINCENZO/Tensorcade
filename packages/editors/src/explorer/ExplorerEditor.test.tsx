@@ -10,10 +10,7 @@ import {
   registerCustomBlocks,
   customBlockDefinitions,
 } from './custom-blocks.js';
-import {
-  registerPythonGenerators,
-  transpileWorkspaceToPython,
-} from './python-generator.js';
+import { registerPythonGenerators, transpileWorkspaceToPython } from './python-generator.js';
 import { tensorcadeDarkTheme } from './token-theme.js';
 import { defaultToolboxJson, defaultToolboxXml } from './toolbox.js';
 import { CodePreviewPane } from './CodePreviewPane.js';
@@ -271,9 +268,7 @@ describe('Blockly Explorer Editor (Sub-step 5b.2)', () => {
     });
 
     it('renders execute button when onRun prop is provided', () => {
-      const html = renderToStaticMarkup(
-        <ExplorerEditor onRun={() => {}} />,
-      );
+      const html = renderToStaticMarkup(<ExplorerEditor onRun={() => {}} />);
       expect(html).toContain('data-testid="btn-run-code"');
       expect(html).toContain('Execute');
     });

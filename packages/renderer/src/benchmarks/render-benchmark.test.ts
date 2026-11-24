@@ -10,7 +10,7 @@ function create40x40GridState(): GridWorldState {
   const width = 40;
   const height = 40;
   const grid: number[][] = Array.from({ length: height }, () =>
-    Array.from({ length: width }, () => CellType.EMPTY as number)
+    Array.from({ length: width }, () => CellType.EMPTY as number),
   );
 
   // Distribute 100 crops, 50 rocks, 20 ravines deterministically

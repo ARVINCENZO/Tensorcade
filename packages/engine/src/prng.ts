@@ -38,9 +38,7 @@ export class DeterministicPRNG {
    */
   public nextInt(min: number, max: number): number {
     if (max < min) {
-      throw new RangeError(
-        `DeterministicPRNG.nextInt: max (${max}) must be >= min (${min})`,
-      );
+      throw new RangeError(`DeterministicPRNG.nextInt: max (${max}) must be >= min (${min})`);
     }
     const range = max - min + 1;
     return min + Math.floor(this.nextFloat() * range);

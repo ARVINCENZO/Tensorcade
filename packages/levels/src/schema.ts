@@ -83,14 +83,14 @@ export const LevelManifestSchema = z.object({
     .array(z.number().int())
     .length(5, 'Every level must specify exactly 5 evaluation seeds for anti-guessing'),
   entrypoint: z.string().min(1).default('step'),
-  environmentConfig: z.record(z.unknown()),
+  environmentConfig: z.record(z.string(), z.unknown()),
   starterCode: z.object({
     explorer: z.string().default(''),
     builder: z.string().default(''),
     hacker: z.string().default(''),
   }),
   parsonsBlocks: z.array(ParsonsBlockSchema).optional(),
-  blocklyToolbox: z.record(z.unknown()).optional(),
+  blocklyToolbox: z.record(z.string(), z.unknown()).optional(),
   referenceSolution: z.string().min(1, 'Reference solution cannot be empty'),
   astConstraints: AstConstraintsSchema.optional(),
   scoringRubric: ScoringRubricSchema,

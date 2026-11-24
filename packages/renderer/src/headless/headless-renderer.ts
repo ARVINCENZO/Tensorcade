@@ -84,7 +84,7 @@ export class HeadlessRenderer implements Renderer<GridWorldState, GridWorldRende
       prevState,
       currState,
       alpha,
-      this.config.reducedMotion
+      this.config.reducedMotion,
     );
 
     const commands: VirtualDrawCommand[] = [];
@@ -236,7 +236,7 @@ export class HeadlessRenderer implements Renderer<GridWorldState, GridWorldRende
   private computeFrameDigest(
     commands: ReadonlyArray<VirtualDrawCommand>,
     tick: number,
-    alpha: number
+    alpha: number,
   ): string {
     // Quantize alpha to 3 decimal places for stable floating point hashing
     const quantizedAlpha = Math.round(alpha * 1000) / 1000;

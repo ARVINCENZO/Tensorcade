@@ -177,7 +177,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
       if (containerRef.current && rendererRef.current) {
         rendererRef.current.resize(
           containerRef.current.clientWidth || 640,
-          containerRef.current.clientHeight || 480
+          containerRef.current.clientHeight || 480,
         );
       }
     };
@@ -293,7 +293,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
           break;
       }
     },
-    [togglePlay, stepForward, stepBackward, resetToStart, jumpToEnd, setSpeed]
+    [togglePlay, stepForward, stepBackward, resetToStart, jumpToEnd, setSpeed],
   );
 
   const headingText = state ? (DIRECTION_NAMES[state.rover.heading] ?? 'Unknown') : '';
@@ -361,12 +361,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
       >
         {/* Accessible Screen-Reader DOM Mirror (WCAG 2.2 AA) */}
         {state && (
-          <div
-            className="sr-only"
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-          >
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
             <p>
               Tick {safeIndex} of {totalTicks}. Rover positioned at column {state.rover.x + 1}, row{' '}
               {state.rover.y + 1}, facing {headingText}. Energy: {state.rover.energy} percent.
@@ -382,7 +377,7 @@ export const ReplayViewer: React.FC<ReplayViewerProps> = ({
                       <td key={cIdx}>
                         {state.rover.x === cIdx && state.rover.y === rIdx
                           ? `Rover (${headingText})`
-                          : CELL_TYPE_NAMES[cell] ?? 'Empty'}
+                          : (CELL_TYPE_NAMES[cell] ?? 'Empty')}
                       </td>
                     ))}
                   </tr>

@@ -64,12 +64,7 @@ export interface GridWorldConfig {
   readonly star2TickThreshold?: number;
 }
 
-export type RobotActionType =
-  | 'MOVE_FORWARD'
-  | 'TURN_LEFT'
-  | 'TURN_RIGHT'
-  | 'HARVEST'
-  | 'WAIT';
+export type RobotActionType = 'MOVE_FORWARD' | 'TURN_LEFT' | 'TURN_RIGHT' | 'HARVEST' | 'WAIT';
 
 export interface RobotActionParams {
   readonly type?: RobotActionType;

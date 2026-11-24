@@ -22,11 +22,9 @@ async function runLevel11ScriptedWin(mode: 'explorer' | 'hacker') {
 
   const startedAt = performance.now();
 
-  await useProgressStore.getState().recordAttempt(
-    LEVEL_1_1_MANIFEST.id,
-    LEVEL_1_1_MANIFEST.worldId,
-    db,
-  );
+  await useProgressStore
+    .getState()
+    .recordAttempt(LEVEL_1_1_MANIFEST.id, LEVEL_1_1_MANIFEST.worldId, db);
 
   const evaluation = await evaluateLevelSeeds({
     manifest: LEVEL_1_1_MANIFEST,

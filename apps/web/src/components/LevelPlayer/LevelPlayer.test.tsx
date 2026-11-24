@@ -61,7 +61,9 @@ describe('LevelControlsBar & LevelPlayer', () => {
     expect(source).toContain("import('@tensorcade/runtime')");
     expect(source).toContain("import('@tensorcade/engine')");
     // Ensure no static value imports from heavy packages
-    expect(source).not.toMatch(/^import\s+\{[^}]*\}\s+from\s+['"]@tensorcade\/(editors|renderer|runtime|engine)['"]/m);
+    expect(source).not.toMatch(
+      /^import\s+\{[^}]*\}\s+from\s+['"]@tensorcade\/(editors|renderer|runtime|engine)['"]/m,
+    );
   });
 
   it('maps manifest environmentConfig to GridWorldConfig and tick-0 snapshot', () => {

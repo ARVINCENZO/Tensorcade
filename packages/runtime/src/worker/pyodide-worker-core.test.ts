@@ -33,12 +33,7 @@ describe('PyodideWorkerCore', () => {
   });
 
   it('intercepts built-in game actions and constructs canonical ActionTrace', async () => {
-    const code = [
-      'step()',
-      'turn_right()',
-      'step()',
-      'harvest()',
-    ].join('\n');
+    const code = ['step()', 'turn_right()', 'step()', 'harvest()'].join('\n');
 
     const response = await core.executeCode({
       code,
@@ -102,7 +97,7 @@ describe('PyodideWorkerCore', () => {
     // Spawn a background thread to set SIGINT flag after 100ms
     const thread = new ThreadWorker(
       'const { workerData } = require("node:worker_threads"); const view = new Int32Array(workerData); setTimeout(() => { Atomics.store(view, 0, 2); }, 100);',
-      { eval: true, workerData: buffer }
+      { eval: true, workerData: buffer },
     );
 
     const startTime = Date.now();

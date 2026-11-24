@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  BaseSimulationEngine,
-  FIXED_DELTA_MS,
-  TickAccumulator,
-} from './core-loop.js';
+import { BaseSimulationEngine, FIXED_DELTA_MS, TickAccumulator } from './core-loop.js';
 import type { DiscreteAction, SimulationOutcome } from './types.js';
 
 interface TestCounterState {
@@ -17,10 +13,7 @@ interface TestCounterActionParams {
   triggerWin?: boolean;
 }
 
-class TestCounterEngine extends BaseSimulationEngine<
-  TestCounterState,
-  TestCounterActionParams
-> {
+class TestCounterEngine extends BaseSimulationEngine<TestCounterState, TestCounterActionParams> {
   protected initWorldState(seed: number): TestCounterState {
     return {
       counter: seed % 100,
@@ -28,9 +21,7 @@ class TestCounterEngine extends BaseSimulationEngine<
     };
   }
 
-  protected advanceTick(
-    actions: ReadonlyArray<DiscreteAction<TestCounterActionParams>>,
-  ): void {
+  protected advanceTick(actions: ReadonlyArray<DiscreteAction<TestCounterActionParams>>): void {
     // Default tick behavior
     this.state.counter += 1;
 

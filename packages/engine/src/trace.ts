@@ -37,7 +37,10 @@ export class TraceError extends Error {
 }
 
 export class TraceValidationError extends TraceError {
-  constructor(message: string, public readonly zodIssues?: z.ZodIssue[]) {
+  constructor(
+    message: string,
+    public readonly zodIssues?: z.ZodIssue[],
+  ) {
     super(message);
     this.name = 'TraceValidationError';
   }
@@ -55,7 +58,11 @@ export class TraceDivergenceError extends TraceError {
 }
 
 export class TraceTimeoutError extends TraceError {
-  constructor(message: string, public readonly totalTicks: number, public readonly maxTicks: number) {
+  constructor(
+    message: string,
+    public readonly totalTicks: number,
+    public readonly maxTicks: number,
+  ) {
     super(message);
     this.name = 'TraceTimeoutError';
   }
@@ -97,11 +104,7 @@ export class ActionTraceRecorder {
   /**
    * Exports the completed action trace.
    */
-  public exportTrace(
-    mode: PlayMode,
-    totalTicks: number,
-    terminalHashHex: string,
-  ): ActionTrace {
+  public exportTrace(mode: PlayMode, totalTicks: number, terminalHashHex: string): ActionTrace {
     const traceData: ActionTrace = {
       version: '1.0.0',
       levelId: this.levelId,
@@ -118,11 +121,7 @@ export class ActionTraceRecorder {
   /**
    * Exports the trace as a canonical sorted JSON string.
    */
-  public exportCanonicalJson(
-    mode: PlayMode,
-    totalTicks: number,
-    terminalHashHex: string,
-  ): string {
+  public exportCanonicalJson(mode: PlayMode, totalTicks: number, terminalHashHex: string): string {
     return canonicalJsonStringify(this.exportTrace(mode, totalTicks, terminalHashHex));
   }
 
@@ -156,7 +155,7 @@ export class ActionTraceReplayer {
     const result = ActionTraceSchema.safeParse(rawTrace);
     if (!result.success) {
       throw new TraceValidationError(
-        `Action trace validation failed: ${result.error.errors.map((e) => e.message).join('; ')}`,
+        `Action trace validation failed: ${result.error.issues.map((e) => e.message).join('; ')}`,
         result.error.issues,
       );
     }

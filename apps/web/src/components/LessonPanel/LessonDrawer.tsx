@@ -54,7 +54,10 @@ function renderMarkdownBlocks(markdown: string): React.ReactNode[] {
   const flushList = (keyPrefix: string) => {
     if (listItems.length === 0) return;
     elements.push(
-      <ul key={`${keyPrefix}-ul`} className="list-disc pl-5 space-y-1 text-sm text-[var(--tc-text-muted)]">
+      <ul
+        key={`${keyPrefix}-ul`}
+        className="list-disc pl-5 space-y-1 text-sm text-[var(--tc-text-muted)]"
+      >
         {listItems.map((item, idx) => (
           <li key={idx}>{renderInlineMarkdown(item)}</li>
         ))}

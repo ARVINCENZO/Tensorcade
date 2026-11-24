@@ -123,9 +123,7 @@ export function ResultModalPanel({
             <span
               aria-hidden="true"
               className={
-                result.star1Earned
-                  ? 'text-[var(--tc-accent-amber)]'
-                  : 'text-[var(--tc-text-dim)]'
+                result.star1Earned ? 'text-[var(--tc-accent-amber)]' : 'text-[var(--tc-text-dim)]'
               }
             >
               {result.star1Earned ? '★' : '☆'}
@@ -149,9 +147,7 @@ export function ResultModalPanel({
             <span
               aria-hidden="true"
               className={
-                result.star2Earned
-                  ? 'text-[var(--tc-accent-amber)]'
-                  : 'text-[var(--tc-text-dim)]'
+                result.star2Earned ? 'text-[var(--tc-accent-amber)]' : 'text-[var(--tc-text-dim)]'
               }
             >
               {result.star2Earned ? '★' : '☆'}
@@ -176,9 +172,7 @@ export function ResultModalPanel({
             <span
               aria-hidden="true"
               className={
-                result.star3Earned
-                  ? 'text-[var(--tc-accent-amber)]'
-                  : 'text-[var(--tc-text-dim)]'
+                result.star3Earned ? 'text-[var(--tc-accent-amber)]' : 'text-[var(--tc-text-dim)]'
               }
             >
               {result.star3Earned ? '★' : '☆'}

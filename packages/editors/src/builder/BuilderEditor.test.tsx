@@ -189,7 +189,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
       <BuilderEditor blocks={sampleBlocks} onChange={onChange} />,
     );
 
-    const addBtn = container.querySelector('[data-testid="add-block-btn-block-2"]') as HTMLButtonElement;
+    const addBtn = container.querySelector(
+      '[data-testid="add-block-btn-block-2"]',
+    ) as HTMLButtonElement;
     expect(addBtn).not.toBeNull();
 
     act(() => {
@@ -253,7 +255,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
     expect(onChange).toHaveBeenLastCalledWith('step()\nharvest()');
 
     // Move slot 0 down
-    const moveDownBtn = container.querySelector('[data-testid="move-down-btn-0"]') as HTMLButtonElement;
+    const moveDownBtn = container.querySelector(
+      '[data-testid="move-down-btn-0"]',
+    ) as HTMLButtonElement;
     expect(moveDownBtn).not.toBeNull();
 
     act(() => {
@@ -288,20 +292,26 @@ describe('Builder Mode: BuilderEditor Component', () => {
     );
 
     const indentBtn = container.querySelector('[data-testid="indent-btn-0"]') as HTMLButtonElement;
-    const unindentBtn = container.querySelector('[data-testid="unindent-btn-0"]') as HTMLButtonElement;
+    const unindentBtn = container.querySelector(
+      '[data-testid="unindent-btn-0"]',
+    ) as HTMLButtonElement;
 
     // Indent: 0 -> 4
     act(() => {
       indentBtn.click();
     });
-    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe('Indent: 4 sp');
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 4 sp',
+    );
     expect(onChange).toHaveBeenLastCalledWith('    step()');
 
     // Indent: 4 -> 8
     act(() => {
       indentBtn.click();
     });
-    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe('Indent: 8 sp');
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 8 sp',
+    );
     expect(onChange).toHaveBeenLastCalledWith('        step()');
 
     // Indent max is 8, button should be disabled
@@ -311,7 +321,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
     act(() => {
       unindentBtn.click();
     });
-    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe('Indent: 4 sp');
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 4 sp',
+    );
     expect(onChange).toHaveBeenLastCalledWith('    step()');
 
     // Keyboard Tab and Shift+Tab navigation
@@ -319,16 +331,24 @@ describe('Builder Mode: BuilderEditor Component', () => {
 
     // Shift+Tab unindents 4 -> 0
     act(() => {
-      slot0.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+      slot0.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }),
+      );
     });
-    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe('Indent: 0 sp');
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 0 sp',
+    );
     expect(onChange).toHaveBeenLastCalledWith('step()');
 
     // Tab indents 0 -> 4
     act(() => {
-      slot0.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false, bubbles: true }));
+      slot0.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false, bubbles: true }),
+      );
     });
-    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe('Indent: 4 sp');
+    expect(container.querySelector('[data-testid="slot-0-indent-badge"]')?.textContent).toBe(
+      'Indent: 4 sp',
+    );
     expect(onChange).toHaveBeenLastCalledWith('    step()');
 
     unmount();
@@ -344,7 +364,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
       />,
     );
 
-    const blankInput = container.querySelector('[data-testid="blank-input-0-0"]') as HTMLInputElement;
+    const blankInput = container.querySelector(
+      '[data-testid="blank-input-0-0"]',
+    ) as HTMLInputElement;
     expect(blankInput).not.toBeNull();
     expect(blankInput.placeholder).toBe('___');
 
@@ -384,7 +406,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
     act(() => {
       runBtn.click();
     });
-    expect(container.querySelector('[data-testid="consecutive-warning"]')?.textContent).toContain('(1/3');
+    expect(container.querySelector('[data-testid="consecutive-warning"]')?.textContent).toContain(
+      '(1/3',
+    );
     expect(container.querySelector('[data-testid="educational-pause-banner"]')).toBeNull();
     expect(onRun).toHaveBeenCalledTimes(1);
 
@@ -392,7 +416,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
     act(() => {
       runBtn.click();
     });
-    expect(container.querySelector('[data-testid="consecutive-warning"]')?.textContent).toContain('(2/3');
+    expect(container.querySelector('[data-testid="consecutive-warning"]')?.textContent).toContain(
+      '(2/3',
+    );
     expect(container.querySelector('[data-testid="educational-pause-banner"]')).toBeNull();
     expect(onRun).toHaveBeenCalledTimes(2);
 
@@ -409,7 +435,9 @@ describe('Builder Mode: BuilderEditor Component', () => {
     expect(onRun).toHaveBeenCalledTimes(2);
 
     // Dismiss pause
-    const dismissBtn = container.querySelector('[data-testid="dismiss-pause-btn"]') as HTMLButtonElement;
+    const dismissBtn = container.querySelector(
+      '[data-testid="dismiss-pause-btn"]',
+    ) as HTMLButtonElement;
     expect(dismissBtn).not.toBeNull();
     act(() => {
       dismissBtn.click();
@@ -424,9 +452,7 @@ describe('Builder Mode: BuilderEditor Component', () => {
     const { container, unmount } = renderComponent(
       <BuilderEditor
         blocks={sampleBlocks}
-        initialOrder={[
-          { id: 'block-2', indent: 0 },
-        ]}
+        initialOrder={[{ id: 'block-2', indent: 0 }]}
         onRun={onRun}
       />,
     );
@@ -462,10 +488,7 @@ describe('Builder Mode: BuilderEditor Component', () => {
       isDistractor: false,
     };
     const { container, unmount } = renderComponent(
-      <BuilderEditor
-        blocks={[singleBlock]}
-        initialOrder={[{ id: 'only-1', indent: 0 }]}
-      />,
+      <BuilderEditor blocks={[singleBlock]} initialOrder={[{ id: 'only-1', indent: 0 }]} />,
     );
 
     const availableTray = container.querySelector('[data-testid="available-blocks-tray"]');

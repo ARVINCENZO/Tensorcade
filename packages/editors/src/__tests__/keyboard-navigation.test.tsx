@@ -50,7 +50,7 @@ vi.mock('@monaco-editor/react', () => {
             KeyCode: { Enter: 3 },
             editor: { setModelMarkers: vi.fn() },
             MarkerSeverity: { Error: 8 },
-          }
+          },
         );
       }, [onMount, value]);
 
@@ -108,7 +108,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             currentMode="explorer"
             onModeChange={onModeChange}
             supportedModes={['explorer', 'builder', 'hacker']}
-          />
+          />,
         );
       });
 
@@ -117,9 +117,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
 
       // Explorer -> ArrowRight -> Builder
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       });
       expect(onModeChange).toHaveBeenCalledWith('builder');
 
@@ -130,15 +128,13 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             currentMode="builder"
             onModeChange={onModeChange}
             supportedModes={['explorer', 'builder', 'hacker']}
-          />
+          />,
         );
       });
 
       // Builder -> ArrowRight -> Hacker
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       });
       expect(onModeChange).toHaveBeenCalledWith('hacker');
 
@@ -149,30 +145,24 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             currentMode="hacker"
             onModeChange={onModeChange}
             supportedModes={['explorer', 'builder', 'hacker']}
-          />
+          />,
         );
       });
 
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
       });
       expect(onModeChange).toHaveBeenCalledWith('builder');
 
       // Home key jumps to first tab (Explorer)
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'Home', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
       });
       expect(onModeChange).toHaveBeenCalledWith('explorer');
 
       // End key jumps to last tab (Hacker)
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'End', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
       });
       expect(onModeChange).toHaveBeenCalledWith('hacker');
     });
@@ -184,7 +174,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             currentMode="builder"
             onModeChange={() => {}}
             supportedModes={['explorer', 'builder', 'hacker']}
-          />
+          />,
         );
       });
 
@@ -207,15 +197,12 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
       const onRun = vi.fn();
 
       act(() => {
-        root?.render(
-          <EditorWorkspace
-            defaultMode="explorer"
-            onRun={onRun}
-          />
-        );
+        root?.render(<EditorWorkspace defaultMode="explorer" onRun={onRun} />);
       });
 
-      const workspace = container?.querySelector<HTMLDivElement>('[data-testid="editor-workspace"]');
+      const workspace = container?.querySelector<HTMLDivElement>(
+        '[data-testid="editor-workspace"]',
+      );
       expect(workspace).not.toBeNull();
 
       act(() => {
@@ -224,7 +211,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             key: 'Enter',
             ctrlKey: true,
             bubbles: true,
-          })
+          }),
         );
       });
 
@@ -237,15 +224,13 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
 
       act(() => {
         root?.render(
-          <EditorWorkspace
-            defaultMode="builder"
-            parsonsBlocks={testBlocks}
-            onRun={onRun}
-          />
+          <EditorWorkspace defaultMode="builder" parsonsBlocks={testBlocks} onRun={onRun} />,
         );
       });
 
-      const workspace = container?.querySelector<HTMLDivElement>('[data-testid="editor-workspace"]');
+      const workspace = container?.querySelector<HTMLDivElement>(
+        '[data-testid="editor-workspace"]',
+      );
       expect(workspace).not.toBeNull();
 
       act(() => {
@@ -254,7 +239,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             key: 'Enter',
             metaKey: true,
             bubbles: true,
-          })
+          }),
         );
       });
 
@@ -267,16 +252,12 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
       const code = ['step()', 'harvest()', ''].join('\n');
 
       act(() => {
-        root?.render(
-          <EditorWorkspace
-            defaultMode="hacker"
-            initialCode={code}
-            onRun={onRun}
-          />
-        );
+        root?.render(<EditorWorkspace defaultMode="hacker" initialCode={code} onRun={onRun} />);
       });
 
-      const workspace = container?.querySelector<HTMLDivElement>('[data-testid="editor-workspace"]');
+      const workspace = container?.querySelector<HTMLDivElement>(
+        '[data-testid="editor-workspace"]',
+      );
 
       act(() => {
         workspace?.dispatchEvent(
@@ -284,7 +265,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             key: 'Enter',
             ctrlKey: true,
             bubbles: true,
-          })
+          }),
         );
       });
 
@@ -298,17 +279,12 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
       const onChange = vi.fn();
 
       act(() => {
-        root?.render(
-          <BuilderEditor
-            blocks={testBlocks}
-            onChange={onChange}
-          />
-        );
+        root?.render(<BuilderEditor blocks={testBlocks} onChange={onChange} />);
       });
 
       // 1. Find "Add block" buttons in available tray
       const addStepBtn = container?.querySelector<HTMLButtonElement>(
-        '[data-testid="add-block-btn-b-step"]'
+        '[data-testid="add-block-btn-b-step"]',
       );
       expect(addStepBtn).not.toBeNull();
 
@@ -320,7 +296,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
       // Add second block (harvest)
       act(() => {
         const addHarvestBtn = container?.querySelector<HTMLButtonElement>(
-          '[data-testid="add-block-btn-b-harvest"]'
+          '[data-testid="add-block-btn-b-harvest"]',
         );
         addHarvestBtn?.click();
       });
@@ -331,7 +307,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
 
       // Indent second block (+4 spaces)
       const indentButton = container?.querySelector<HTMLButtonElement>(
-        '[data-testid="indent-btn-1"]'
+        '[data-testid="indent-btn-1"]',
       );
       expect(indentButton).not.toBeNull();
       act(() => {
@@ -340,7 +316,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
 
       // Move second block Up
       const moveUpButton = container?.querySelector<HTMLButtonElement>(
-        '[data-testid="move-up-btn-1"]'
+        '[data-testid="move-up-btn-1"]',
       );
       expect(moveUpButton).not.toBeNull();
       act(() => {
@@ -349,7 +325,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
 
       // Remove a block
       const removeButton = container?.querySelector<HTMLButtonElement>(
-        '[data-testid="remove-btn-0"]'
+        '[data-testid="remove-btn-0"]',
       );
       expect(removeButton).not.toBeNull();
       act(() => {
@@ -371,7 +347,7 @@ describe('Keyboard-Only Interaction & Navigation Verification', () => {
             defaultMode="explorer"
             isGraduationOpen={true}
             onGraduationDismiss={onDismiss}
-          />
+          />,
         );
       });
 

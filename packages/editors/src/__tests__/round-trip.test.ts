@@ -18,10 +18,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import * as Blockly from 'blockly';
-import {
-  EXPLORER_BLOCK_TYPES,
-  registerCustomBlocks,
-} from '../explorer/custom-blocks.js';
+import { EXPLORER_BLOCK_TYPES, registerCustomBlocks } from '../explorer/custom-blocks.js';
 import {
   registerPythonGenerators,
   transpileWorkspaceToPython,
@@ -280,7 +277,10 @@ describe('Phase 5b End-to-End Round-Trip Parity Verification', () => {
           heading: Direction.EAST,
           energy: 100,
         },
-        crops: [{ x: 0, y: 0 }, { x: 1, y: 0 }],
+        crops: [
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+        ],
         star2TickThreshold: 10,
       };
 

@@ -14,7 +14,9 @@ const program = new Command();
 
 program
   .name('tensorcade-level-validator')
-  .description('Validates level manifests and reference solutions under Pyodide in Node across 5 seeds')
+  .description(
+    'Validates level manifests and reference solutions under Pyodide in Node across 5 seeds',
+  )
   .version('1.0.0')
   .option('-l, --level <id>', 'Validate a specific level ID')
   .option('-w, --world <worldId>', 'Validate all levels in a specific world')

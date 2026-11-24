@@ -68,7 +68,6 @@ export const tensorcadeMonacoDarkTheme: editor.IStandaloneThemeData = {
 /** Alias for tensorcadeMonacoDarkTheme */
 export const tensorcadeDarkTheme = tensorcadeMonacoDarkTheme;
 
-
 /**
  * Register the Tensorcade Monaco theme on the given Monaco instance.
  */

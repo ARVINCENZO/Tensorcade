@@ -49,7 +49,9 @@ export class LevelValidator {
       const astResult = AstInspector.inspect(manifest.referenceSolution, manifest.astConstraints);
       if (!astResult.valid) {
         for (const violation of astResult.violations) {
-          errors.push(`AST Constraint Violation: [${violation.rule}] Line ${violation.line}: ${violation.message}`);
+          errors.push(
+            `AST Constraint Violation: [${violation.rule}] Line ${violation.line}: ${violation.message}`,
+          );
         }
       }
     }
@@ -115,14 +117,24 @@ export class LevelValidator {
           if (finalState.crashed) {
             const err = `Seed ${seed}: Rover crashed: ${finalState.crashReason ?? 'Unknown collision'}`;
             errors.push(err);
-            seedResults.push({ seed, success: false, totalTicks: replayResult.totalTicks, error: err });
+            seedResults.push({
+              seed,
+              success: false,
+              totalTicks: replayResult.totalTicks,
+              error: err,
+            });
             continue;
           }
 
           if (finalState.cropsHarvested < finalState.totalCropsInitial) {
             const err = `Seed ${seed}: Victory condition not met (Harvested: ${finalState.cropsHarvested}/${finalState.totalCropsInitial})`;
             errors.push(err);
-            seedResults.push({ seed, success: false, totalTicks: replayResult.totalTicks, error: err });
+            seedResults.push({
+              seed,
+              success: false,
+              totalTicks: replayResult.totalTicks,
+              error: err,
+            });
             continue;
           }
 

@@ -53,7 +53,7 @@ export type SessionUser = z.infer<typeof SessionUserSchema>;
 export const ApiErrorSchema = z.object({
   code: z.string().min(1),
   message: z.string().min(1),
-  details: z.record(z.unknown()).optional(),
+  details: z.record(z.string(), z.unknown()).optional(),
   timestamp: z.string().datetime(),
 });
 export type ApiError = z.infer<typeof ApiErrorSchema>;
@@ -66,7 +66,7 @@ export const DiscreteActionSchema = z.object({
   tick: z.number().int().positive('Action tick must be an integer >= 1'),
   type: z.string().min(1),
   params: z
-    .record(z.union([z.number(), z.string(), z.boolean(), z.null()]))
+    .record(z.string(), z.union([z.number(), z.string(), z.boolean(), z.null()]))
     .default({}),
 });
 export type DiscreteActionData = z.infer<typeof DiscreteActionSchema>;
@@ -79,7 +79,8 @@ export interface DiscreteAction<TParams = Record<string, number | string | boole
 
 // Deprecated alias for backwards compatibility
 export const TickActionSchema = DiscreteActionSchema;
-export type TickAction<TParams = Record<string, number | string | boolean | null>> = DiscreteAction<TParams>;
+export type TickAction<TParams = Record<string, number | string | boolean | null>> =
+  DiscreteAction<TParams>;
 
 /**
  * Deterministic action trace serialized for replay and verification.
@@ -103,7 +104,7 @@ export type ActionTrace<_TAction = unknown> = z.infer<typeof ActionTraceSchema>;
 export const EngineConfigSchema = z.object({
   levelId: z.string().min(1),
   maxTicks: z.number().int().positive(),
-  environmentParams: z.record(z.union([z.number(), z.string(), z.boolean()])),
+  environmentParams: z.record(z.string(), z.union([z.number(), z.string(), z.boolean()])),
 });
 export type EngineConfig = z.infer<typeof EngineConfigSchema>;
 
@@ -147,7 +148,7 @@ export const ProgressItemSchema = z.object({
   starsEarned: z.number().int().min(0).max(3),
   clearedModes: z.array(PlayModeSchema),
   bestScore: z.number(),
-  bestEfficiency: z.record(z.number()).optional(),
+  bestEfficiency: z.record(z.string(), z.number()).optional(),
   hintTierReached: z.number().int().min(0).max(3).optional(),
   stateHash: z.string().optional(),
   updatedAt: z.number().int(),

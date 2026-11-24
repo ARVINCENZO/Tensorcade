@@ -43,8 +43,11 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
   });
 
   // Track consecutive submissions with distractors (anti-brute-force mechanism)
-  const [consecutiveInvalidSubmissions, setConsecutiveInvalidSubmissions] = React.useState<number>(0);
-  const [activePauseDistractors, setActivePauseDistractors] = React.useState<DistractorInfo[] | null>(null);
+  const [consecutiveInvalidSubmissions, setConsecutiveInvalidSubmissions] =
+    React.useState<number>(0);
+  const [activePauseDistractors, setActivePauseDistractors] = React.useState<
+    DistractorInfo[] | null
+  >(null);
 
   // Available blocks: blocks in `blocks` that are NOT yet in `solution`
   const availableBlocks = React.useMemo(() => {
@@ -116,7 +119,8 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
       setSolution((prev) => {
         const item = prev[index];
         if (!item) return prev;
-        const nextIndent = direction === 'in' ? stepIndentUp(item.indent) : stepIndentDown(item.indent);
+        const nextIndent =
+          direction === 'in' ? stepIndentUp(item.indent) : stepIndentDown(item.indent);
         const next = [...prev];
         next[index] = { ...item, indent: nextIndent };
         return next;
@@ -192,8 +196,9 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                 <span aria-hidden="true">⚠️</span> Educational Pause: Think Before Guessing
               </h3>
               <p className="mt-1 text-sm text-[var(--tc-text-muted)]">
-                You have submitted 3 consecutive attempts containing distractor blocks. Brute-forcing permutations is
-                paused to encourage reflection. Review why these pieces do not fit:
+                You have submitted 3 consecutive attempts containing distractor blocks.
+                Brute-forcing permutations is paused to encourage reflection. Review why these
+                pieces do not fit:
               </p>
             </div>
             <Button
@@ -216,7 +221,9 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                 <div className="font-mono text-xs text-[var(--tc-accent-crimson)] font-semibold">
                   <code>{distractor.code}</code>
                 </div>
-                <div className="mt-1 text-xs text-[var(--tc-text-primary)]">{distractor.explanation}</div>
+                <div className="mt-1 text-xs text-[var(--tc-text-primary)]">
+                  {distractor.explanation}
+                </div>
               </div>
             ))}
           </div>
@@ -264,7 +271,10 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
           className="flex flex-col bg-[var(--tc-bg-surface)] border border-[var(--tc-border-subtle)] rounded-[var(--tc-radius-md)] p-3 overflow-hidden"
         >
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--tc-border-subtle)]">
-            <h2 id="available-blocks-heading" className="text-xs font-semibold uppercase text-[var(--tc-text-muted)]">
+            <h2
+              id="available-blocks-heading"
+              className="text-xs font-semibold uppercase text-[var(--tc-text-muted)]"
+            >
               Available Blocks ({availableBlocks.length})
             </h2>
           </div>
@@ -313,7 +323,10 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
           className="flex flex-col bg-[var(--tc-bg-surface)] border border-[var(--tc-border-subtle)] rounded-[var(--tc-radius-md)] p-3 overflow-hidden"
         >
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--tc-border-subtle)]">
-            <h2 id="solution-canvas-heading" className="text-xs font-semibold uppercase text-[var(--tc-text-muted)]">
+            <h2
+              id="solution-canvas-heading"
+              className="text-xs font-semibold uppercase text-[var(--tc-text-muted)]"
+            >
               Solution Canvas ({solution.length} blocks)
             </h2>
             <span className="text-[10px] text-[var(--tc-text-dim)]">
@@ -333,7 +346,9 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                 data-testid="empty-canvas-placeholder"
               >
                 <span>Add blocks from the left tray to construct your solution.</span>
-                <span className="mt-1 text-[11px]">Adjust order and indentation to match Python syntax.</span>
+                <span className="mt-1 text-[11px]">
+                  Adjust order and indentation to match Python syntax.
+                </span>
               </div>
             ) : (
               solution.map((slot, index) => {
@@ -454,7 +469,10 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                         {segments.map((seg, sIdx) => {
                           if (seg.type === 'text') {
                             return (
-                              <span key={sIdx} className="whitespace-pre text-[var(--tc-text-primary)]">
+                              <span
+                                key={sIdx}
+                                className="whitespace-pre text-[var(--tc-text-primary)]"
+                              >
                                 {seg.text}
                               </span>
                             );
@@ -477,7 +495,11 @@ export const BuilderEditor: React.FC<BuilderEditorProps> = ({
                               data-testid={`blank-input-${index}-${blankIndex}`}
                               onChange={(e) => handleBlankChange(index, blankIndex, e.target.value)}
                               onInput={(e) =>
-                                handleBlankChange(index, blankIndex, (e.target as HTMLInputElement).value)
+                                handleBlankChange(
+                                  index,
+                                  blankIndex,
+                                  (e.target as HTMLInputElement).value,
+                                )
                               }
                               className={cn(
                                 'h-6 px-1.5 py-0.5 text-xs font-mono rounded border',

@@ -8,10 +8,10 @@ import { ReplayViewer } from './ReplayViewer.js';
 function createMockGridWorldState(
   roverX = 1,
   roverY = 1,
-  heading: Direction = Direction.EAST
+  heading: Direction = Direction.EAST,
 ): GridWorldState {
   const grid: number[][] = Array.from({ length: 4 }, () =>
-    Array.from({ length: 4 }, () => CellType.EMPTY as number)
+    Array.from({ length: 4 }, () => CellType.EMPTY as number),
   );
   grid[1]![1] = CellType.CROP;
   grid[2]![2] = CellType.ROCK;
@@ -53,7 +53,7 @@ describe('ReplayViewer', () => {
         snapshots={[s0, s1, s2]}
         config={{ width: 4, height: 4 }}
         levelTitle="Robot Farm 1.1 First Furrow"
-      />
+      />,
     );
 
     // 1. HUD elements
@@ -94,10 +94,7 @@ describe('ReplayViewer', () => {
     const s0 = createSnapshot(crashedState, 5);
 
     const html = renderToStaticMarkup(
-      <ReplayViewer
-        snapshots={[s0]}
-        config={{ width: 4, height: 4 }}
-      />
+      <ReplayViewer snapshots={[s0]} config={{ width: 4, height: 4 }} />,
     );
 
     expect(html).toContain('[CRASHED]');
@@ -115,10 +112,12 @@ describe('ReplayViewer', () => {
         config={{ width: 4, height: 4 }}
         tickIndex={2}
         speed={4}
-      />
+      />,
     );
 
-    expect(html).toContain('Tick <strong class="text-[var(--tc-accent-amber,#F59E0B)]">2</strong> / 2');
+    expect(html).toContain(
+      'Tick <strong class="text-[var(--tc-accent-amber,#F59E0B)]">2</strong> / 2',
+    );
     expect(html).toContain('aria-pressed="true"');
   });
 });

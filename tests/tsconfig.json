@@ -7,5 +7,10 @@
     "types": ["node"]
   },
   "include": ["**/*"],
-  "references": [{ "path": "../packages/contracts" }, { "path": "../packages/ui" }]
+  "references": [
+    { "path": "../packages/contracts" },
+    { "path": "../packages/ui" },
+    { "path": "../packages/engine" },
+    { "path": "../packages/renderer" }
+  ]
 }

@@ -112,7 +112,9 @@ describe('xxHash64 & State Hashing (packages/engine/hash)', () => {
         tags: ['alpha', 'beta'],
       };
       const result = canonicalJsonStringify(complex);
-      expect(result).toBe('{"actions":[{"type":"HARVEST","x":2}],"tags":["alpha","beta"],"tick":42}');
+      expect(result).toBe(
+        '{"actions":[{"type":"HARVEST","x":2}],"tags":["alpha","beta"],"tick":42}',
+      );
     });
   });
 });

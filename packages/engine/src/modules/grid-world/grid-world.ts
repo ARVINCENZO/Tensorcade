@@ -18,10 +18,7 @@ import {
   type RobotActionParams,
 } from './types.js';
 
-export class RobotFarmSimulation extends BaseSimulationEngine<
-  GridWorldState,
-  RobotActionParams
-> {
+export class RobotFarmSimulation extends BaseSimulationEngine<GridWorldState, RobotActionParams> {
   public readonly gridWidth: number;
   public readonly gridHeight: number;
   public readonly star2TickThreshold: number;
@@ -100,9 +97,7 @@ export class RobotFarmSimulation extends BaseSimulationEngine<
     return RobotFarmSimulation.createInitialState(this.config);
   }
 
-  protected advanceTick(
-    actions: ReadonlyArray<DiscreteAction<RobotActionParams>>,
-  ): void {
+  protected advanceTick(actions: ReadonlyArray<DiscreteAction<RobotActionParams>>): void {
     if (this.state.crashed) {
       return;
     }
@@ -115,7 +110,8 @@ export class RobotFarmSimulation extends BaseSimulationEngine<
 
     // Process primary action for this tick (or default WAIT)
     const primaryAction = actions[0];
-    const actionType = primaryAction?.params?.type ?? (primaryAction?.type as RobotActionParams['type']) ?? 'WAIT';
+    const actionType =
+      primaryAction?.params?.type ?? (primaryAction?.type as RobotActionParams['type']) ?? 'WAIT';
 
     switch (actionType) {
       case 'MOVE_FORWARD': {

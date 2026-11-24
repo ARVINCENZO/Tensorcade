@@ -34,7 +34,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
   describe('Static markup and WAI-ARIA conformance', () => {
     it('renders role="tablist" with aria-label="Editor Play Mode"', () => {
       const html = renderToStaticMarkup(
-        <ModeSwitcher currentMode="explorer" onModeChange={() => {}} />
+        <ModeSwitcher currentMode="explorer" onModeChange={() => {}} />,
       );
 
       expect(html).toContain('role="tablist"');
@@ -43,7 +43,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
 
     it('renders all three modes when supportedModes is omitted', () => {
       const html = renderToStaticMarkup(
-        <ModeSwitcher currentMode="explorer" onModeChange={() => {}} />
+        <ModeSwitcher currentMode="explorer" onModeChange={() => {}} />,
       );
 
       expect(html).toContain('Explorer');
@@ -60,7 +60,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
           currentMode="hacker"
           supportedModes={['explorer', 'hacker']}
           onModeChange={() => {}}
-        />
+        />,
       );
 
       expect(html).toContain('Explorer');
@@ -71,11 +71,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
 
     it('returns null and renders nothing when supportedModes contains only 1 mode', () => {
       const html = renderToStaticMarkup(
-        <ModeSwitcher
-          currentMode="hacker"
-          supportedModes={['hacker']}
-          onModeChange={() => {}}
-        />
+        <ModeSwitcher currentMode="hacker" supportedModes={['hacker']} onModeChange={() => {}} />,
       );
 
       expect(html).toBe('');
@@ -83,7 +79,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
 
     it('sets aria-selected="true" on currentMode tab and "false" on inactive tabs', () => {
       const html = renderToStaticMarkup(
-        <ModeSwitcher currentMode="builder" onModeChange={() => {}} />
+        <ModeSwitcher currentMode="builder" onModeChange={() => {}} />,
       );
 
       expect(html).toMatch(/data-mode="builder"[^>]*aria-selected="true"/);
@@ -97,9 +93,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
       const handleModeChange = vi.fn();
 
       act(() => {
-        root?.render(
-          <ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />
-        );
+        root?.render(<ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />);
       });
 
       const builderTab = container?.querySelector<HTMLButtonElement>('[data-mode="builder"]');
@@ -117,9 +111,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
       const handleModeChange = vi.fn();
 
       act(() => {
-        root?.render(
-          <ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />
-        );
+        root?.render(<ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />);
       });
 
       const explorerTab = container?.querySelector<HTMLButtonElement>('[data-mode="explorer"]');
@@ -135,7 +127,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
 
       act(() => {
         root?.render(
-          <ModeSwitcher currentMode="explorer" disabled={true} onModeChange={handleModeChange} />
+          <ModeSwitcher currentMode="explorer" disabled={true} onModeChange={handleModeChange} />,
         );
       });
 
@@ -151,18 +143,14 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
       const handleModeChange = vi.fn();
 
       act(() => {
-        root?.render(
-          <ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />
-        );
+        root?.render(<ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />);
       });
 
       const tablist = container?.querySelector<HTMLDivElement>('[role="tablist"]');
       expect(tablist).toBeDefined();
 
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       });
 
       expect(handleModeChange).toHaveBeenCalledWith('builder');
@@ -172,17 +160,13 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
       const handleModeChange = vi.fn();
 
       act(() => {
-        root?.render(
-          <ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />
-        );
+        root?.render(<ModeSwitcher currentMode="explorer" onModeChange={handleModeChange} />);
       });
 
       const tablist = container?.querySelector<HTMLDivElement>('[role="tablist"]');
 
       act(() => {
-        tablist?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })
-        );
+        tablist?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
       });
 
       expect(handleModeChange).toHaveBeenCalledWith('hacker');
@@ -192,9 +176,7 @@ describe('ModeSwitcher (Sub-step 5b.4)', () => {
       const handleModeChange = vi.fn();
 
       act(() => {
-        root?.render(
-          <ModeSwitcher currentMode="builder" onModeChange={handleModeChange} />
-        );
+        root?.render(<ModeSwitcher currentMode="builder" onModeChange={handleModeChange} />);
       });
 
       const tablist = container?.querySelector<HTMLDivElement>('[role="tablist"]');

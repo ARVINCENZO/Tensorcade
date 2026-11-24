@@ -15,7 +15,11 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { RobotFarmSimulation } from './modules/grid-world/grid-world.js';
-import { Direction, type GridWorldConfig, type RobotActionType } from './modules/grid-world/types.js';
+import {
+  Direction,
+  type GridWorldConfig,
+  type RobotActionType,
+} from './modules/grid-world/types.js';
 import { ActionTraceRecorder, ActionTraceReplayer } from './trace.js';
 import type { DiscreteAction } from './types.js';
 
@@ -50,17 +54,13 @@ describe('Engine Property-Based Verification (packages/engine/properties)', () =
     'WAIT',
   );
 
-  const actionSequenceArb = fc
-    .array(actionTypeArb, { minLength: 1, maxLength: 20 })
-    .map((types) =>
-      types.map(
-        (type, idx): DiscreteAction<{ type: RobotActionType }> => ({
-          tick: idx + 1,
-          type,
-          params: { type },
-        }),
-      ),
-    );
+  const actionSequenceArb = fc.array(actionTypeArb, { minLength: 1, maxLength: 20 }).map((types) =>
+    types.map((type, idx): DiscreteAction<{ type: RobotActionType }> => ({
+      tick: idx + 1,
+      type,
+      params: { type },
+    })),
+  );
 
   const seedArb = fc.integer({ min: 0, max: 0x7fffffff });
 

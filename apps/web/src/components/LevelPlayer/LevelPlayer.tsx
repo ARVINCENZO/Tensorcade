@@ -135,8 +135,7 @@ export interface LevelPlayerProps {
   readonly onNextLevel?: ((nextLevelId: string) => void) | undefined;
   /** Optional dependency injection for Python execution (used in unit tests). */
   readonly executePython?:
-    | ((request: CodeExecutionRequest) => Promise<CodeExecutionResponse>)
-    | undefined;
+    ((request: CodeExecutionRequest) => Promise<CodeExecutionResponse>) | undefined;
   /** Optional dependency injection for simulation engine creation (used in unit tests). */
   readonly createSimulation?: ((config: GridWorldConfig) => SimulationLike) | undefined;
   /** Optional dependency injection for EditorWorkspace (used in unit tests). */

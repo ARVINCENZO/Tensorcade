@@ -2,11 +2,7 @@ import type { PlayMode } from '@tensorcade/contracts';
 import { useSettingsStore } from '../storage/useSettingsStore.js';
 
 export type AnalyticsEventName =
-  | 'level_started'
-  | 'level_completed'
-  | 'hint_viewed'
-  | 'mode_switched'
-  | 'error_encountered';
+  'level_started' | 'level_completed' | 'hint_viewed' | 'mode_switched' | 'error_encountered';
 
 export interface AnalyticsEventPayloads {
   level_started: {
@@ -80,10 +76,7 @@ async function defaultFetchTransport(
 }
 
 export interface AnalyticsTracker {
-  track: <T extends AnalyticsEventName>(
-    event: T,
-    properties: AnalyticsEventPayloads[T],
-  ) => boolean;
+  track: <T extends AnalyticsEventName>(event: T, properties: AnalyticsEventPayloads[T]) => boolean;
 }
 
 /**
@@ -99,10 +92,7 @@ export function createAnalyticsTracker(config: AnalyticsTrackerConfig = {}): Ana
   const transport = config.transport ?? defaultFetchTransport;
 
   return {
-    track<T extends AnalyticsEventName>(
-      event: T,
-      properties: AnalyticsEventPayloads[T],
-    ): boolean {
+    track<T extends AnalyticsEventName>(event: T, properties: AnalyticsEventPayloads[T]): boolean {
       if (getConsent() !== true) {
         return false;
       }

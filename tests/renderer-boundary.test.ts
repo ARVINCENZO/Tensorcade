@@ -11,7 +11,7 @@ describe('packages/renderer architectural boundary lint rules', { timeout: 15000
     });
     expect(results[0]?.messages.length).toBeGreaterThan(0);
     const hasForbiddenMutation = results[0]?.messages.some((m) =>
-      m.message.includes('forbidden in renderer')
+      m.message.includes('forbidden in renderer'),
     );
     expect(hasForbiddenMutation).toBe(true);
   });
@@ -23,7 +23,7 @@ describe('packages/renderer architectural boundary lint rules', { timeout: 15000
     });
     expect(results[0]?.messages.length).toBeGreaterThan(0);
     const hasForbiddenMutation = results[0]?.messages.some((m) =>
-      m.message.includes('forbidden in renderer')
+      m.message.includes('forbidden in renderer'),
     );
     expect(hasForbiddenMutation).toBe(true);
   });

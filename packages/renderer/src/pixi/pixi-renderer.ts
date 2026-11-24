@@ -71,7 +71,7 @@ export class PixiGridWorldRenderer implements Renderer<GridWorldState, GridWorld
 
     this.dpr = Math.min(
       typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1,
-      this.config.maxDpr
+      this.config.maxDpr,
     );
 
     // 1. Initialize PixiJS v8 Application
@@ -170,7 +170,7 @@ export class PixiGridWorldRenderer implements Renderer<GridWorldState, GridWorld
       prev,
       curr,
       alpha,
-      this.config.reducedMotion
+      this.config.reducedMotion,
     );
 
     if (this.roverSprite) {
@@ -178,7 +178,7 @@ export class PixiGridWorldRenderer implements Renderer<GridWorldState, GridWorld
       // Position at center of the tile
       this.roverSprite.position.set(
         rover.x * tileSize + tileSize / 2,
-        rover.y * tileSize + tileSize / 2
+        rover.y * tileSize + tileSize / 2,
       );
       this.roverSprite.rotation = rover.rotationRad;
     }
@@ -192,7 +192,7 @@ export class PixiGridWorldRenderer implements Renderer<GridWorldState, GridWorld
       if (curr.crashed) {
         this.crashSprite.position.set(
           curr.rover.x * tileSize + tileSize / 2,
-          curr.rover.y * tileSize + tileSize / 2
+          curr.rover.y * tileSize + tileSize / 2,
         );
       }
     }
@@ -227,7 +227,7 @@ export class PixiGridWorldRenderer implements Renderer<GridWorldState, GridWorld
     const scaledHeight = worldHeight * this.integerScale;
     this.rootContainer.position.set(
       Math.floor((width - scaledWidth) / 2),
-      Math.floor((height - scaledHeight) / 2)
+      Math.floor((height - scaledHeight) / 2),
     );
   }
 

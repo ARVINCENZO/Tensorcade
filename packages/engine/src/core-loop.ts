@@ -8,11 +8,7 @@
  * - Deep isolation snapshot / restore round-tripping.
  */
 
-import {
-  bigintToHex16,
-  computeInitialStateHash,
-  updateCumulativeStateHash,
-} from './hash.js';
+import { bigintToHex16, computeInitialStateHash, updateCumulativeStateHash } from './hash.js';
 import { DeterministicPRNG } from './prng.js';
 import type {
   DiscreteAction,
@@ -242,9 +238,7 @@ export abstract class BaseSimulationEngine<
   /**
    * Advances game logic for a single tick with dispatched actions.
    */
-  protected abstract advanceTick(
-    actions: ReadonlyArray<DiscreteAction<TActionParams>>,
-  ): void;
+  protected abstract advanceTick(actions: ReadonlyArray<DiscreteAction<TActionParams>>): void;
 
   /**
    * Serializes active state into a packed binary buffer using Little-Endian order.

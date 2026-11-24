@@ -15,7 +15,11 @@ export class ServiceWorkerManager {
    * Registers the Pyodide caching service worker if supported by the browser.
    */
   public static async register(swUrl = '/sw.js'): Promise<ServiceWorkerRegistration | null> {
-    if (typeof navigator === 'undefined' || !('serviceWorker' in navigator) || !navigator.serviceWorker) {
+    if (
+      typeof navigator === 'undefined' ||
+      !('serviceWorker' in navigator) ||
+      !navigator.serviceWorker
+    ) {
       return null;
     }
 
@@ -31,7 +35,11 @@ export class ServiceWorkerManager {
    * Returns true if a service worker is currently active and controlling the page.
    */
   public static isServiceWorkerActive(): boolean {
-    if (typeof navigator === 'undefined' || !('serviceWorker' in navigator) || !navigator.serviceWorker) {
+    if (
+      typeof navigator === 'undefined' ||
+      !('serviceWorker' in navigator) ||
+      !navigator.serviceWorker
+    ) {
       return false;
     }
     return !!navigator.serviceWorker.controller;

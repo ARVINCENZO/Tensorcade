@@ -14,7 +14,7 @@ export type Env = z.infer<typeof EnvSchema>;
 export function validateEnv(rawEnv: Record<string, unknown> = import.meta.env ?? {}): Env {
   const result = EnvSchema.safeParse(rawEnv);
   if (!result.success) {
-    const errorDetails = result.error.errors
+    const errorDetails = result.error.issues
       .map((issue) => `[${issue.path.join('.')}]: ${issue.message}`)
       .join('\n');
     throw new Error(`Environment variable validation failed:\n${errorDetails}`);

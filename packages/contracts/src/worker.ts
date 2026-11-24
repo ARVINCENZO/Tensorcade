@@ -36,7 +36,7 @@ export const CodeExecutionRequestSchema = z.object({
   levelId: z.string().min(1),
   seed: z.number().int(),
   timeoutMs: z.number().int().positive().default(5000),
-  mockEnv: z.record(z.unknown()).default({}),
+  mockEnv: z.record(z.string(), z.unknown()).default({}),
   options: ExecutionOptionsSchema.optional(),
 });
 export type CodeExecutionRequest = z.infer<typeof CodeExecutionRequestSchema>;

@@ -71,7 +71,7 @@ export class PyodideWorkerCore implements PyodideWorkerApi {
 
     // Query CPython version
     const pythonVersion = this.pyodide.runPython(
-      'import platform; platform.python_version()'
+      'import platform; platform.python_version()',
     ) as string;
 
     return {
@@ -111,7 +111,7 @@ export class PyodideWorkerCore implements PyodideWorkerApi {
   }
 
   public async executeCode<TAction = unknown>(
-    rawRequest: CodeExecutionRequest
+    rawRequest: CodeExecutionRequest,
   ): Promise<CodeExecutionResponse<TAction>> {
     const startTime = typeof performance !== 'undefined' ? performance.now() : Date.now();
 
@@ -256,16 +256,18 @@ __recorded_actions = __bridge.actions
       let stdout = (pyodide.globals.get('__captured_stdout') as string) || '';
       let stderr = (pyodide.globals.get('__captured_stderr') as string) || '';
       const isBufferTruncated = Boolean(
-        pyodide.runPython('bool(__stdout_buffer.truncated or __stderr_buffer.truncated)')
+        pyodide.runPython('bool(__stdout_buffer.truncated or __stderr_buffer.truncated)'),
       );
       let outputTruncated = isBufferTruncated;
 
       if (stdout.length > maxOutputLength) {
-        stdout = stdout.slice(0, maxOutputLength) + '\n... [Output truncated: maximum size limit reached]';
+        stdout =
+          stdout.slice(0, maxOutputLength) + '\n... [Output truncated: maximum size limit reached]';
         outputTruncated = true;
       }
       if (stderr.length > maxOutputLength) {
-        stderr = stderr.slice(0, maxOutputLength) + '\n... [Stderr truncated: maximum size limit reached]';
+        stderr =
+          stderr.slice(0, maxOutputLength) + '\n... [Stderr truncated: maximum size limit reached]';
         outputTruncated = true;
       }
 
@@ -273,7 +275,7 @@ __recorded_actions = __bridge.actions
       const pyError = pyodide.globals.get('__execution_error');
       if (pyError) {
         const errorString = pyodide.runPython(
-          'import traceback; "".join(traceback.format_exception(__execution_error))'
+          'import traceback; "".join(traceback.format_exception(__execution_error))',
         ) as string;
 
         const diagnosticError = DiagnosticErrorMapper.mapError(errorString, request.code);
@@ -294,8 +296,17 @@ __recorded_actions = __bridge.actions
 
       // Extract recorded actions
       const actionsPy = pyodide.globals.get('__recorded_actions');
-      const rawActions: Array<{ tick: number; type: string; params?: Record<string, number | string | boolean | null> }> =
-        actionsPy ? (actionsPy.toJs() as Array<{ tick: number; type: string; params?: Record<string, number | string | boolean | null> }>) : [];
+      const rawActions: Array<{
+        tick: number;
+        type: string;
+        params?: Record<string, number | string | boolean | null>;
+      }> = actionsPy
+        ? (actionsPy.toJs() as Array<{
+            tick: number;
+            type: string;
+            params?: Record<string, number | string | boolean | null>;
+          }>)
+        : [];
 
       let actionTrace: ActionTrace<TAction> | undefined;
       if (rawActions.length > 0) {
@@ -344,7 +355,9 @@ __recorded_actions = __bridge.actions
   public getMemoryUsageMb(): number {
     if (!this.pyodide) return 0;
     try {
-      const heapBytes = (this.pyodide as unknown as { _module?: { HEAPU8?: Uint8Array } })._module?.HEAPU8?.byteLength ?? 0;
+      const heapBytes =
+        (this.pyodide as unknown as { _module?: { HEAPU8?: Uint8Array } })._module?.HEAPU8
+          ?.byteLength ?? 0;
       return Math.round((heapBytes / (1024 * 1024)) * 100) / 100;
     } catch {
       return 0;

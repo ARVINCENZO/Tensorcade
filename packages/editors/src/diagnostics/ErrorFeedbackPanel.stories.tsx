@@ -24,8 +24,7 @@ const sampleIndexError: DiagnosticError = {
 
 const sampleSyntaxError: DiagnosticError = {
   errorType: 'SyntaxError',
-  whatHappened:
-    "Python could not understand this code because of a syntax error: expected ':'.",
+  whatHappened: "Python could not understand this code because of a syntax error: expected ':'.",
   whereItOccurred: {
     line: 1,
     column: 14,

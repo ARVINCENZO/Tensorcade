@@ -26,9 +26,9 @@ describe('apps/web/src/analytics - Consent-Gated Analytics', () => {
     expect(
       tracker.track('level_started', { levelId: 'w1-l1', worldId: 'world-1', mode: 'explorer' }),
     ).toBe(false);
-    expect(
-      tracker.track('hint_viewed', { levelId: 'w1-l1', worldId: 'world-1', tier: 1 }),
-    ).toBe(false);
+    expect(tracker.track('hint_viewed', { levelId: 'w1-l1', worldId: 'world-1', tier: 1 })).toBe(
+      false,
+    );
 
     currentConsent = false;
     expect(
@@ -41,12 +41,10 @@ describe('apps/web/src/analytics - Consent-Gated Analytics', () => {
         ticks: 24,
       }),
     ).toBe(false);
-    expect(
-      tracker.track('mode_switched', { fromMode: 'explorer', toMode: 'builder' }),
-    ).toBe(false);
-    expect(
-      tracker.track('error_encountered', { code: 'E_SYNTAX', message: 'SyntaxError' }),
-    ).toBe(false);
+    expect(tracker.track('mode_switched', { fromMode: 'explorer', toMode: 'builder' })).toBe(false);
+    expect(tracker.track('error_encountered', { code: 'E_SYNTAX', message: 'SyntaxError' })).toBe(
+      false,
+    );
 
     expect(transportSpy).not.toHaveBeenCalled();
     expect(fetchSpy).not.toHaveBeenCalled();

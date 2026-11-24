@@ -7,9 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, '..');
 
 describe('Vite Dev Server COOP/COEP Verification', () => {
-  it(
-    'serves responses with Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers',
-    async () => {
+  it('serves responses with Cross-Origin-Opener-Policy and Cross-Origin-Embedder-Policy headers', async () => {
     const server = await createServer({
       configFile: false,
       root: webRoot,

@@ -63,9 +63,12 @@ const SYNTAX_DIAGNOSTIC_ERROR: DiagnosticError = {
     column: 12,
     sourceSnippet: '    loss = sum((yt - yp) ** 2 for yt, yp in zip(y_true, y_pred)',
   },
-  whyItMatters: 'Python expressions must be syntactically balanced before the AST can be compiled into bytecode.',
-  whatToInvestigate: 'Inspect line 3 and check that every opening parenthesis has a corresponding closing parenthesis.',
-  rawTraceback: '  File "solution.py", line 3\n    loss = sum((yt - yp) ** 2 for yt, yp in zip(y_true, y_pred)\n                                                                 ^\nSyntaxError: was never closed',
+  whyItMatters:
+    'Python expressions must be syntactically balanced before the AST can be compiled into bytecode.',
+  whatToInvestigate:
+    'Inspect line 3 and check that every opening parenthesis has a corresponding closing parenthesis.',
+  rawTraceback:
+    '  File "solution.py", line 3\n    loss = sum((yt - yp) ** 2 for yt, yp in zip(y_true, y_pred)\n                                                                 ^\nSyntaxError: was never closed',
 };
 
 const RUNTIME_DIAGNOSTIC_ERROR: DiagnosticError = {
@@ -76,8 +79,10 @@ const RUNTIME_DIAGNOSTIC_ERROR: DiagnosticError = {
     column: 13,
     sourceSnippet: '    weight = weights[i + 1]',
   },
-  whyItMatters: 'Zero-indexed arrays have valid indices from 0 to len-1; accessing index len causes an off-by-one fault.',
-  whatToInvestigate: 'Check the upper loop bound. Consider whether range(len(weights) - 1) is intended.',
+  whyItMatters:
+    'Zero-indexed arrays have valid indices from 0 to len-1; accessing index len causes an off-by-one fault.',
+  whatToInvestigate:
+    'Check the upper loop bound. Consider whether range(len(weights) - 1) is intended.',
 };
 
 export const Default: Story = {

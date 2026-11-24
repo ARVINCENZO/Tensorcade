@@ -46,20 +46,10 @@ export function ConsentBanner({
         </div>
 
         <div className="flex items-center justify-end gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={() => handleDecision(false)}
-          >
+          <Button type="button" variant="secondary" size="sm" onClick={() => handleDecision(false)}>
             Decline
           </Button>
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={() => handleDecision(true)}
-          >
+          <Button type="button" variant="primary" size="sm" onClick={() => handleDecision(true)}>
             Accept
           </Button>
         </div>

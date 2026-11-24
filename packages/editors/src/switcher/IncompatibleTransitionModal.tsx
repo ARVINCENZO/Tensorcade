@@ -35,10 +35,7 @@ export function IncompatibleTransitionModal({
         }
       }}
     >
-      <DialogContent
-        className={className}
-        aria-describedby="incompatible-transition-description"
-      >
+      <DialogContent className={className} aria-describedby="incompatible-transition-description">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
             <span
@@ -68,8 +65,8 @@ export function IncompatibleTransitionModal({
                 <span>Your Hacker code remains safely preserved.</span>
               </div>
               <p className="text-[var(--tc-text-muted)] pl-4">
-                All your custom lines and edits are stored in memory. You can return to Hacker Mode at
-                any time without losing your work.
+                All your custom lines and edits are stored in memory. You can return to Hacker Mode
+                at any time without losing your work.
               </p>
             </div>
           </div>

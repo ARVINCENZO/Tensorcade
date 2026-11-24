@@ -11,7 +11,7 @@ function createLevelSnapshots(): EngineSnapshot<GridWorldState>[] {
   // Generate 8 ticks of simulated motion: rover moves forward, harvests crop, turns south
   for (let tick = 0; tick <= 8; tick++) {
     const grid: number[][] = Array.from({ length: height }, () =>
-      Array.from({ length: width }, () => CellType.EMPTY as number)
+      Array.from({ length: width }, () => CellType.EMPTY as number),
     );
     grid[0]![0] = CellType.BASE;
     grid[2]![2] = CellType.ROCK;
@@ -95,7 +95,7 @@ export const HazardCrash: Story = {
             inventory: 0,
           },
           grid: Array.from({ length: 5 }, () =>
-            Array.from({ length: 5 }, () => CellType.EMPTY as number)
+            Array.from({ length: 5 }, () => CellType.EMPTY as number),
           ),
           totalCropsInitial: 1,
           cropsHarvested: 0,

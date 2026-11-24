@@ -12,13 +12,7 @@ import { colors, pixelGrid } from '@tensorcade/ui/tokens';
 import { Texture } from 'pixi.js';
 
 export type TextureKey =
-  | 'EMPTY_TILE'
-  | 'BASE_TILE'
-  | 'ROVER'
-  | 'CROP'
-  | 'ROCK'
-  | 'RAVINE'
-  | 'CRASH';
+  'EMPTY_TILE' | 'BASE_TILE' | 'ROVER' | 'CROP' | 'ROCK' | 'RAVINE' | 'CRASH';
 
 export class TokenSpriteAtlas {
   private textures: Map<TextureKey, Texture> = new Map();

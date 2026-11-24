@@ -1,4 +1,10 @@
-import { openDB, type DBSchema, type IDBPDatabase, type IDBPTransaction, type StoreNames } from 'idb';
+import {
+  openDB,
+  type DBSchema,
+  type IDBPDatabase,
+  type IDBPTransaction,
+  type StoreNames,
+} from 'idb';
 import type { PlayMode } from '@tensorcade/contracts';
 
 export const TENSORCADE_DB_NAME = 'tensorcade_local_v1';
@@ -98,12 +104,18 @@ export type TensorcadeDb = IDBPDatabase<TensorcadeDbSchema>;
 export interface OpenTensorcadeDbOptions {
   dbName?: string | undefined;
   version?: number | undefined;
-  onUpgrade?: ((
-    db: TensorcadeDb,
-    oldVersion: number,
-    newVersion: number | null,
-    transaction: IDBPTransaction<TensorcadeDbSchema, StoreNames<TensorcadeDbSchema>[], 'versionchange'>,
-  ) => void) | undefined;
+  onUpgrade?:
+    | ((
+        db: TensorcadeDb,
+        oldVersion: number,
+        newVersion: number | null,
+        transaction: IDBPTransaction<
+          TensorcadeDbSchema,
+          StoreNames<TensorcadeDbSchema>[],
+          'versionchange'
+        >,
+      ) => void)
+    | undefined;
 }
 
 /**
@@ -114,7 +126,11 @@ export function upgradeTensorcadeDb(
   db: TensorcadeDb,
   oldVersion: number,
   newVersion: number | null,
-  transaction: IDBPTransaction<TensorcadeDbSchema, StoreNames<TensorcadeDbSchema>[], 'versionchange'>,
+  transaction: IDBPTransaction<
+    TensorcadeDbSchema,
+    StoreNames<TensorcadeDbSchema>[],
+    'versionchange'
+  >,
 ): void {
   const targetVersion = newVersion ?? TENSORCADE_DB_VERSION;
 
@@ -234,10 +250,13 @@ export function mergeLevelProgressRecords(
     };
   }
 
-  const starsEarned = (Math.max(local.starsEarned, incoming.starsEarned) as 0 | 1 | 2 | 3);
-  const clearedModes = Array.from(new Set<PlayMode>([...local.clearedModes, ...incoming.clearedModes]));
+  const starsEarned = Math.max(local.starsEarned, incoming.starsEarned) as 0 | 1 | 2 | 3;
+  const clearedModes = Array.from(
+    new Set<PlayMode>([...local.clearedModes, ...incoming.clearedModes]),
+  );
   const bestScore = Math.max(local.bestScore, incoming.bestScore);
-  const hintTierReached = (Math.max(local.hintTierReached, incoming.hintTierReached) as 0 | 1 | 2 | 3);
+  const hintTierReached = Math.max(local.hintTierReached, incoming.hintTierReached) as
+    0 | 1 | 2 | 3;
   const attempts = Math.max(local.attempts, incoming.attempts);
   const updatedAt = Math.max(local.updatedAt, incoming.updatedAt);
 
@@ -292,9 +311,7 @@ export async function getLevelProgress(
   return db.get('level_progress', levelId);
 }
 
-export async function getAllLevelProgress(
-  db: TensorcadeDb,
-): Promise<LevelProgressRecord[]> {
+export async function getAllLevelProgress(db: TensorcadeDb): Promise<LevelProgressRecord[]> {
   return db.getAll('level_progress');
 }
 
@@ -317,23 +334,15 @@ export async function mergeLevelProgress(
   return merged;
 }
 
-export async function enqueueSyncItem(
-  db: TensorcadeDb,
-  item: SyncQueueItem,
-): Promise<string> {
+export async function enqueueSyncItem(db: TensorcadeDb, item: SyncQueueItem): Promise<string> {
   return db.put('sync_queue', item);
 }
 
-export async function getPendingSyncItems(
-  db: TensorcadeDb,
-): Promise<SyncQueueItem[]> {
+export async function getPendingSyncItems(db: TensorcadeDb): Promise<SyncQueueItem[]> {
   return db.getAllFromIndex('sync_queue', 'by-createdAt');
 }
 
-export async function removeSyncItem(
-  db: TensorcadeDb,
-  id: string,
-): Promise<void> {
+export async function removeSyncItem(db: TensorcadeDb, id: string): Promise<void> {
   await db.delete('sync_queue', id);
 }
 

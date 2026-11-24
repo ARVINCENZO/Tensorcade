@@ -15,8 +15,12 @@ import type { AstConstraints, AstInspectionResult, AstViolation } from '@tensorc
  */
 function stripCommentsAndStrings(code: string): string {
   // Replace multi-line strings ("""...""" and '''...''')
-  let cleaned = code.replace(/"""[\s\S]*?"""/g, (match) => '\n'.repeat(match.split('\n').length - 1));
-  cleaned = cleaned.replace(/'''[\s\S]*?'''/g, (match) => '\n'.repeat(match.split('\n').length - 1));
+  let cleaned = code.replace(/"""[\s\S]*?"""/g, (match) =>
+    '\n'.repeat(match.split('\n').length - 1),
+  );
+  cleaned = cleaned.replace(/'''[\s\S]*?'''/g, (match) =>
+    '\n'.repeat(match.split('\n').length - 1),
+  );
 
   // Replace single-line strings ("..." and '...')
   cleaned = cleaned.replace(/"(?:[^"\\]|\\.)*"/g, '""');
@@ -62,7 +66,9 @@ export class AstInspector {
     if (constraints.bannedImports && constraints.bannedImports.length > 0) {
       for (const mod of constraints.bannedImports) {
         // Matches: import os, import os as x, from os import y, __import__('os')
-        const importRegex = new RegExp(`(?:^|\\s)(?:import\\s+.*\\b${mod}\\b|from\\s+${mod}\\b|__import__\\s*\\(\\s*['"]${mod}['"])`);
+        const importRegex = new RegExp(
+          `(?:^|\\s)(?:import\\s+.*\\b${mod}\\b|from\\s+${mod}\\b|__import__\\s*\\(\\s*['"]${mod}['"])`,
+        );
         for (let i = 0; i < cleanedLines.length; i++) {
           const line = cleanedLines[i] ?? '';
           if (importRegex.test(line)) {

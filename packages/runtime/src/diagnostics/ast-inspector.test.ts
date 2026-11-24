@@ -37,11 +37,7 @@ describe('AstInspector', () => {
   });
 
   it('detects banned security imports (os, sys, socket, urllib)', () => {
-    const code = [
-      'import os',
-      'import urllib.request',
-      'from sys import exit',
-    ].join('\n');
+    const code = ['import os', 'import urllib.request', 'from sys import exit'].join('\n');
 
     const result = AstInspector.inspect(code, {
       bannedImports: ['os', 'sys', 'socket', 'urllib'],

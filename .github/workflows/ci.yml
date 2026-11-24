@@ -97,6 +97,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build workspace packages
+        run: pnpm build
+
       - name: Run unit & contract tests
         run: pnpm test
 
@@ -154,7 +157,7 @@ jobs:
     name: Playwright Visual Regression Testing (Pinned Docker Container)
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.0-jammy
+      image: mcr.microsoft.com/playwright:v1.49.1-jammy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -180,9 +183,9 @@ jobs:
       - name: Run Playwright Visual Regression Tests
         run: |
           if [ "${{ github.event.inputs.update_snapshots }}" = "true" ]; then
-            npx playwright test tests/e2e/vrt.spec.ts --update-snapshots
+            UPDATE_SNAPSHOTS=true pnpm exec playwright test tests/e2e/vrt.spec.ts --update-snapshots
           else
-            npx playwright test tests/e2e/vrt.spec.ts
+            pnpm exec playwright test tests/e2e/vrt.spec.ts
           fi
 
       - name: Upload VRT Test Results on Failure
@@ -197,7 +200,7 @@ jobs:
     name: axe-core Accessibility Audit (Pinned Docker Container)
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.0-jammy
+      image: mcr.microsoft.com/playwright:v1.49.1-jammy
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -221,7 +224,7 @@ jobs:
         run: pnpm --filter @tensorcade/web... build
 
       - name: Run axe-core accessibility audit
-        run: npx playwright test tests/e2e/axe.spec.ts
+        run: pnpm exec playwright test tests/e2e/axe.spec.ts
 
   lighthouse:
     name: Lighthouse CI (Mobile Performance & Accessibility)

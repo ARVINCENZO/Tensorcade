@@ -36,7 +36,9 @@ export function stepIndentDown(currentIndent: number): number {
 /**
  * Splits block code into static text segments and blank slots.
  */
-export function parseCodeSegments(code: string): Array<{ type: 'text' | 'blank'; text: string; index?: number }> {
+export function parseCodeSegments(
+  code: string,
+): Array<{ type: 'text' | 'blank'; text: string; index?: number }> {
   const segments: Array<{ type: 'text' | 'blank'; text: string; index?: number }> = [];
   const parts = code.split(BLANK_PATTERN);
   let blankCount = 0;

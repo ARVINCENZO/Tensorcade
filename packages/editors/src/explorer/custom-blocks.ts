@@ -246,9 +246,7 @@ export function registerCustomBlocks(): void {
   }
 
   // Filter only unregistered blocks to prevent console warnings
-  const toRegister = customBlockDefinitions.filter(
-    (def) => !Blockly.Blocks[def.type],
-  );
+  const toRegister = customBlockDefinitions.filter((def) => !Blockly.Blocks[def.type]);
 
   if (toRegister.length > 0) {
     Blockly.common.defineBlocksWithJsonArray(toRegister);

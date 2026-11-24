@@ -35,10 +35,7 @@ export function GraduationPromptModal({
         }
       }}
     >
-      <DialogContent
-        className={className}
-        aria-describedby="graduation-prompt-description"
-      >
+      <DialogContent className={className} aria-describedby="graduation-prompt-description">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
             <span
@@ -63,13 +60,15 @@ export function GraduationPromptModal({
           >
             {/* Canonical Graduation Prompt Quote (docs/02-learning-design.md §5.4) */}
             <blockquote className="rounded-[var(--tc-radius-sm)] border-l-2 border-[var(--tc-accent-cyan)] bg-[var(--tc-bg-base)] p-3.5 italic text-[var(--tc-text-primary)] font-mono text-xs leading-relaxed">
-              &ldquo;You solved the logic. Now prove you can write production Python in Hacker Mode to earn the Command Crest (Hacker Mastery).&rdquo;
+              &ldquo;You solved the logic. Now prove you can write production Python in Hacker Mode
+              to earn the Command Crest (Hacker Mastery).&rdquo;
             </blockquote>
 
             <div className="space-y-2 text-xs text-[var(--tc-text-muted)]">
               <p>
                 Your working logic will be automatically pre-populated into the Hacker Mode editor.
-                Translate your model into production Python to claim <strong>Star 3 (Hacker Mastery)</strong> and enter the global leaderboards.
+                Translate your model into production Python to claim{' '}
+                <strong>Star 3 (Hacker Mastery)</strong> and enter the global leaderboards.
               </p>
               <div className="flex items-center gap-2 pt-1 font-mono text-[var(--tc-accent-cyan)] font-semibold">
                 <span aria-hidden="true">★</span>

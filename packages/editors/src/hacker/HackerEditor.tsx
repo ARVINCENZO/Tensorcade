@@ -2,10 +2,7 @@ import * as React from 'react';
 import { Editor, type Monaco } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { clsx } from 'clsx';
-import {
-  TENSORCADE_DARK_THEME_NAME,
-  registerTensorcadeTheme,
-} from './token-theme.js';
+import { TENSORCADE_DARK_THEME_NAME, registerTensorcadeTheme } from './token-theme.js';
 import {
   buildLockedDecorations,
   handleLockedKeyDown,
@@ -110,9 +107,12 @@ export function HackerEditor({
       monacoRef.current = monacoInstance;
 
       // Register Ctrl+Enter / Cmd+Enter keybinding for onRun
-      editorInstance.addCommand(monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter, () => {
-        onRunRef.current?.();
-      });
+      editorInstance.addCommand(
+        monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter,
+        () => {
+          onRunRef.current?.();
+        },
+      );
 
       // Intercept keystrokes that attempt to modify locked regions or run execution
       editorInstance.onKeyDown((e) => {
@@ -137,8 +137,8 @@ export function HackerEditor({
                 startLineNumber: change.range.startLineNumber,
                 endLineNumber: change.range.endLineNumber,
               },
-              currentLocked
-            )
+              currentLocked,
+            ),
           );
 
           if (violatesLock) {
@@ -162,7 +162,7 @@ export function HackerEditor({
                         text: lastValidCodeRef.current,
                       },
                     ],
-                    () => null
+                    () => null,
                   );
                 }
               }
@@ -189,14 +189,14 @@ export function HackerEditor({
 
       onMount?.(editorInstance, monacoInstance);
     },
-    [diagnosticError, onMount, refreshLockedDecorations]
+    [diagnosticError, onMount, refreshLockedDecorations],
   );
 
   return (
     <div
       className={clsx(
         'tensorcade-hacker-editor relative w-full h-full min-h-[200px] overflow-hidden rounded-md border border-[#232E42] bg-[#0B0F17]',
-        className
+        className,
       )}
       role="region"
       aria-label="Python Code Editor"
@@ -213,7 +213,8 @@ export function HackerEditor({
         options={{
           readOnly,
           automaticLayout: true,
-          fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, Monaco, Consolas, monospace",
+          fontFamily:
+            "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, Monaco, Consolas, monospace",
           fontSize: 14,
           lineHeight: 22,
           minimap: { enabled: false },

@@ -19,7 +19,7 @@ export function isLineInRange(line: number, lockedRanges: ReadonlyArray<LockedRa
  */
 export function isRangeIntersectingLocked(
   range: { startLineNumber: number; endLineNumber: number },
-  lockedRanges: ReadonlyArray<LockedRange>
+  lockedRanges: ReadonlyArray<LockedRange>,
 ): boolean {
   for (const locked of lockedRanges) {
     if (range.startLineNumber <= locked.endLine && range.endLineNumber >= locked.startLine) {
@@ -34,7 +34,7 @@ export function isRangeIntersectingLocked(
  */
 export function buildLockedDecorations(
   monacoInstance: Monaco,
-  lockedRanges: ReadonlyArray<LockedRange>
+  lockedRanges: ReadonlyArray<LockedRange>,
 ): editor.IModelDeltaDecoration[] {
   return lockedRanges.map((locked) => ({
     range: new monacoInstance.Range(locked.startLine, 1, locked.endLine, 1),
@@ -74,7 +74,7 @@ const PASSIVE_KEY_CODES = new Set<string>([
 export function handleLockedKeyDown(
   event: IKeyboardEvent,
   editorInstance: editor.IStandaloneCodeEditor,
-  lockedRanges: ReadonlyArray<LockedRange>
+  lockedRanges: ReadonlyArray<LockedRange>,
 ): boolean {
   if (lockedRanges.length === 0) {
     return false;
@@ -90,7 +90,7 @@ export function handleLockedKeyDown(
       startLineNumber: selection.startLineNumber,
       endLineNumber: selection.endLineNumber,
     },
-    lockedRanges
+    lockedRanges,
   );
 
   if (!overlaps) {

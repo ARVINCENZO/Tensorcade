@@ -155,7 +155,7 @@ describe('PythonRuntimeClient', () => {
     expect(recoveryRes.success).toBe(true);
     expect(recoveryRes.stdout).toBe('recovered');
     expect(mockWorkerApi2.initRuntime).toHaveBeenCalledWith(
-      expect.objectContaining({ baseUrl: '/custom/pyodide/' })
+      expect.objectContaining({ baseUrl: '/custom/pyodide/' }),
     );
     expect(mockWorkerApi2.loadPackages).toHaveBeenCalledWith(expect.arrayContaining(['pandas']));
   });

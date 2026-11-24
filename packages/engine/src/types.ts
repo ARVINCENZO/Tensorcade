@@ -41,10 +41,7 @@ export interface EngineConfig {
 /**
  * Universal SimulationEngine Contract.
  */
-export interface SimulationEngine<
-  TState = unknown,
-  TActionParams = Record<string, unknown>,
-> {
+export interface SimulationEngine<TState = unknown, TActionParams = Record<string, unknown>> {
   readonly levelId: string;
   readonly currentTick: number;
   readonly maxTicks: number;

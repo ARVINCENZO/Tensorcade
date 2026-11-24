@@ -19,11 +19,8 @@ test.describe('Visual Regression Testing (VRT)', () => {
     });
   });
 
-  test('Replay viewer story matches baseline snapshot at integer scale', async ({ page }, testInfo) => {
-    await page.goto('/iframe.html?id=simulation-replayviewer--default&viewMode=story');
-    await page.waitForLoadState('networkidle');
-
-    const snapshotPath = testInfo.snapshotPath('replay-viewer-default.png');
+  test('Level 1.1 route matches baseline snapshot at integer scale', async ({ page }, testInfo) => {
+    const snapshotPath = testInfo.snapshotPath('level-1-1.png');
     if (!fs.existsSync(snapshotPath)) {
       test.skip(
         process.env.CI === 'true' && process.env.UPDATE_SNAPSHOTS !== 'true',
@@ -31,7 +28,11 @@ test.describe('Visual Regression Testing (VRT)', () => {
       );
     }
 
-    await expect(page).toHaveScreenshot('replay-viewer-default.png', {
+    await page.goto('/level/w1-robot-farm-1.1');
+    await page.waitForLoadState('networkidle');
+    await page.getByTestId('level-player').waitFor({ state: 'visible' });
+
+    await expect(page).toHaveScreenshot('level-1-1.png', {
       fullPage: true,
     });
   });

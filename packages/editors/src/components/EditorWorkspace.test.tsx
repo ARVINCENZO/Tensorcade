@@ -34,7 +34,7 @@ vi.mock('@monaco-editor/react', () => {
             KeyCode: { Enter: 3 },
             editor: { setModelMarkers: vi.fn() },
             MarkerSeverity: { Error: 8 },
-          }
+          },
         );
       }, [onMount, value]);
 
@@ -108,7 +108,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
         <EditorWorkspace
           defaultMode="explorer"
           supportedModes={['explorer', 'builder', 'hacker']}
-        />
+        />,
       );
 
       expect(html).toContain('data-testid="editor-workspace"');
@@ -119,12 +119,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
     });
 
     it('renders Run Code button when onRun callback is provided', () => {
-      const html = renderToStaticMarkup(
-        <EditorWorkspace
-          defaultMode="hacker"
-          onRun={() => {}}
-        />
-      );
+      const html = renderToStaticMarkup(<EditorWorkspace defaultMode="hacker" onRun={() => {}} />);
 
       expect(html).toContain('Run Code');
       expect(html).toContain('Ctrl+↵');
@@ -132,10 +127,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
 
     it('renders HackerEditor container when mode is hacker', () => {
       const html = renderToStaticMarkup(
-        <EditorWorkspace
-          defaultMode="hacker"
-          initialCode="print('hello hacker')"
-        />
+        <EditorWorkspace defaultMode="hacker" initialCode="print('hello hacker')" />,
       );
 
       expect(html).toContain('id="tc-mode-panel-hacker"');
@@ -145,10 +137,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
 
     it('renders BuilderEditor container when mode is builder', () => {
       const html = renderToStaticMarkup(
-        <EditorWorkspace
-          defaultMode="builder"
-          parsonsBlocks={mockBlocks}
-        />
+        <EditorWorkspace defaultMode="builder" parsonsBlocks={mockBlocks} />,
       );
 
       expect(html).toContain('id="tc-mode-panel-builder"');
@@ -158,10 +147,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
 
     it('renders ErrorFeedbackPanel when diagnosticError is provided', () => {
       const html = renderToStaticMarkup(
-        <EditorWorkspace
-          defaultMode="hacker"
-          diagnosticError={mockDiagnosticError}
-        />
+        <EditorWorkspace defaultMode="hacker" diagnosticError={mockDiagnosticError} />,
       );
 
       expect(html).toContain('IndexError');
@@ -178,7 +164,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             onConfirm={() => {}}
             onCancel={() => {}}
             targetMode="explorer"
-          />
+          />,
         );
       });
 
@@ -202,7 +188,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             onConfirm={handleConfirm}
             onCancel={handleCancel}
             targetMode="builder"
-          />
+          />,
         );
       });
 
@@ -229,7 +215,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             isOpen={true}
             onConfirm={handleConfirm}
             onCancel={handleCancel}
-          />
+          />,
         );
       });
 
@@ -254,14 +240,14 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             onGraduate={() => {}}
             onDismiss={() => {}}
             completedMode="explorer"
-          />
+          />,
         );
       });
 
       const bodyText = document.body.textContent ?? '';
       // Verify docs/02-learning-design.md §5.4 exact quote
       expect(bodyText).toContain(
-        'You solved the logic. Now prove you can write production Python in Hacker Mode to earn the Command Crest (Hacker Mastery).'
+        'You solved the logic. Now prove you can write production Python in Hacker Mode to earn the Command Crest (Hacker Mastery).',
       );
       expect(bodyText).toContain('Reward: Command Crest');
       expect(bodyText).toContain('Graduate to Hacker Mode →');
@@ -279,7 +265,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             onGraduate={handleGraduate}
             onDismiss={handleDismiss}
             completedMode="builder"
-          />
+          />,
         );
       });
 
@@ -304,7 +290,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             isOpen={true}
             onGraduate={handleGraduate}
             onDismiss={handleDismiss}
-          />
+          />,
         );
       });
 
@@ -326,16 +312,12 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
 
       act(() => {
         root?.render(
-          <EditorWorkspace
-            defaultMode="hacker"
-            initialCode="rover.step()"
-            onRun={handleRun}
-          />
+          <EditorWorkspace defaultMode="hacker" initialCode="rover.step()" onRun={handleRun} />,
         );
       });
 
       const runBtn = Array.from(container?.querySelectorAll('button') ?? []).find((b) =>
-        b.textContent?.includes('Run Code')
+        b.textContent?.includes('Run Code'),
       );
       expect(runBtn).toBeDefined();
 
@@ -356,12 +338,12 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             initialCode="def test():\n    pass\n"
             diagnosticError={mockDiagnosticError}
             onJumpToLine={handleJump}
-          />
+          />,
         );
       });
 
       const jumpBtn = Array.from(container?.querySelectorAll('button') ?? []).find((b) =>
-        b.getAttribute('aria-label')?.includes('Jump to line 5')
+        b.getAttribute('aria-label')?.includes('Jump to line 5'),
       );
       expect(jumpBtn).toBeDefined();
 
@@ -381,12 +363,12 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             defaultMode="explorer"
             onModeChange={handleModeChange}
             diagnosticError={mockDiagnosticError}
-          />
+          />,
         );
       });
 
       const jumpBtn = Array.from(container?.querySelectorAll('button') ?? []).find((b) =>
-        b.getAttribute('aria-label')?.includes('Jump to line 5')
+        b.getAttribute('aria-label')?.includes('Jump to line 5'),
       );
       expect(jumpBtn).toBeDefined();
 
@@ -406,7 +388,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
             defaultMode="builder"
             parsonsBlocks={mockBlocks}
             onCodeChange={handleCodeChange}
-          />
+          />,
         );
       });
 
@@ -431,11 +413,8 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
       act(() => {
         root?.render(
           <div onKeyDown={parentReactKeyDown}>
-            <EditorWorkspace
-              defaultMode="builder"
-              onRun={handleRun}
-            />
-          </div>
+            <EditorWorkspace defaultMode="builder" onRun={handleRun} />
+          </div>,
         );
       });
 
@@ -445,7 +424,12 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
       // Trigger Ctrl+Enter from workspace root
       act(() => {
         workspaceElem?.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true, cancelable: true })
+          new KeyboardEvent('keydown', {
+            key: 'Enter',
+            ctrlKey: true,
+            bubbles: true,
+            cancelable: true,
+          }),
         );
       });
       expect(handleRun).toHaveBeenCalledTimes(1);
@@ -458,7 +442,7 @@ describe('Unified EditorWorkspace (Sub-step 5b.4)', () => {
 
       act(() => {
         monacoFakeChild.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true })
+          new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true }),
         );
       });
       // Should still be 1 (ignored to prevent duplicate execution)

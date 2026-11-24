@@ -44,8 +44,8 @@ export function HintLadderPanel({
   const storedTier = useProgressStore((state) => state.progress[levelId]?.hintTierReached ?? 0);
   const recordHintViewed = useProgressStore((state) => state.recordHintViewed);
 
-  const [tierReached, setTierReached] = React.useState<HintTier>(() =>
-    (Math.max(initialTierReached, storedTier) as HintTier),
+  const [tierReached, setTierReached] = React.useState<HintTier>(
+    () => Math.max(initialTierReached, storedTier) as HintTier,
   );
   const [confirmingTier3, setConfirmingTier3] = React.useState<boolean>(false);
 
@@ -280,8 +280,8 @@ export function HintLadderModal({
         <DialogHeader>
           <DialogTitle>Progressive Diagnostic Hints</DialogTitle>
           <DialogDescription id="hint-ladder-description">
-            Unlock hints one step at a time. Tiers 1 and 2 are free; Tier 3 carries a 1-star
-            mastery penalty.
+            Unlock hints one step at a time. Tiers 1 and 2 are free; Tier 3 carries a 1-star mastery
+            penalty.
           </DialogDescription>
         </DialogHeader>
         <HintLadderPanel {...panelProps} onClose={() => onOpenChange(false)} />

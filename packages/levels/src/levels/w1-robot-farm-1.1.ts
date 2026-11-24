@@ -85,8 +85,7 @@ export const LEVEL_1_1_MANIFEST: LevelManifest = {
   },
   hintLadder: {
     tier1Nudge: 'Move forward into the crop tile before trying to harvest.',
-    tier2Concept:
-      'Sequential execution runs each command one after another from top to bottom.',
+    tier2Concept: 'Sequential execution runs each command one after another from top to bottom.',
     tier3Scaffold: 'Call step() on line 1, then call harvest() on line 2.',
   },
 };

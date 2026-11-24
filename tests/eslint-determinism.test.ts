@@ -4,9 +4,7 @@ import { ESLint } from 'eslint';
 describe('packages/engine determinism lint rules', { timeout: 15000 }, () => {
   const eslint = new ESLint();
 
-  it(
-    'flags non-deterministic Date in packages/engine',
-    async () => {
+  it('flags non-deterministic Date in packages/engine', async () => {
     const code = `export const now = new Date();`;
     const results = await eslint.lintText(code, {
       filePath: 'packages/engine/src/bad-date.ts',

@@ -7,10 +7,10 @@ import { interpolateGridWorld, shortestAngleDiff } from '../interpolation.js';
 function createMockGridWorldState(
   roverX = 0,
   roverY = 0,
-  heading: Direction = Direction.EAST
+  heading: Direction = Direction.EAST,
 ): GridWorldState {
   const grid: number[][] = Array.from({ length: 4 }, () =>
-    Array.from({ length: 4 }, () => CellType.EMPTY as number)
+    Array.from({ length: 4 }, () => CellType.EMPTY as number),
   );
   grid[1]![1] = CellType.CROP;
   grid[2]![2] = CellType.ROCK;

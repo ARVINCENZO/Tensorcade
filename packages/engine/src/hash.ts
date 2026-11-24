@@ -28,7 +28,7 @@ function round64(acc: bigint, input: bigint): bigint {
 function mergeRound64(acc: bigint, val: bigint): bigint {
   const roundVal = round64(0n, val);
   acc = (acc ^ roundVal) & MASK64;
-  acc = ((acc * PRIME64_1) + PRIME64_4) & MASK64;
+  acc = (acc * PRIME64_1 + PRIME64_4) & MASK64;
   return acc;
 }
 
@@ -67,10 +67,7 @@ export function stringToBytes(str: string): Uint8Array {
 /**
  * Computes 64-bit xxHash64 over binary input or string.
  */
-export function xxHash64(
-  input: Uint8Array | ArrayBuffer | string,
-  seed = 0n,
-): bigint {
+export function xxHash64(input: Uint8Array | ArrayBuffer | string, seed = 0n): bigint {
   const bytes =
     typeof input === 'string'
       ? stringToBytes(input)
@@ -121,14 +118,14 @@ export function xxHash64(
 
   // Remaining 4-byte chunk
   if (offset <= len - 4) {
-    const k1 = BigInt(view.getUint32(offset, true)) * PRIME64_1 & MASK64;
+    const k1 = (BigInt(view.getUint32(offset, true)) * PRIME64_1) & MASK64;
     h64 = (rotl64(h64 ^ k1, 23n) * PRIME64_2 + PRIME64_3) & MASK64;
     offset += 4;
   }
 
   // Remaining bytes
   while (offset < len) {
-    const k1 = BigInt(bytes[offset] ?? 0) * PRIME64_5 & MASK64;
+    const k1 = (BigInt(bytes[offset] ?? 0) * PRIME64_5) & MASK64;
     h64 = (rotl64(h64 ^ k1, 11n) * PRIME64_1) & MASK64;
     offset += 1;
   }
@@ -184,9 +181,7 @@ export function updateCumulativeStateHash(
 ): bigint {
   const requiredLen = 8 + 4 + packedState.length;
   const buf =
-    reusableBuf && reusableBuf.length === requiredLen
-      ? reusableBuf
-      : new Uint8Array(requiredLen);
+    reusableBuf && reusableBuf.length === requiredLen ? reusableBuf : new Uint8Array(requiredLen);
   const view =
     reusableView && reusableView.byteLength === requiredLen
       ? reusableView
@@ -210,9 +205,7 @@ export function canonicalJsonStringify(obj: unknown): string {
   if (Array.isArray(obj)) {
     return (
       '[' +
-      obj
-        .map((item) => (item === undefined ? 'null' : canonicalJsonStringify(item)))
-        .join(',') +
+      obj.map((item) => (item === undefined ? 'null' : canonicalJsonStringify(item))).join(',') +
       ']'
     );
   }

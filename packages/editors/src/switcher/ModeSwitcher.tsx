@@ -68,7 +68,7 @@ export function ModeSwitcher({
       onModeChange(nextMode);
       // Focus corresponding tab button
       const targetBtn = tabsListRef.current?.querySelector<HTMLButtonElement>(
-        `[data-mode="${nextMode}"]`
+        `[data-mode="${nextMode}"]`,
       );
       targetBtn?.focus();
     }
@@ -84,7 +84,7 @@ export function ModeSwitcher({
       className={cn(
         'inline-flex items-center gap-1 rounded-[var(--tc-radius-sm)] border border-[var(--tc-border-subtle)] bg-[var(--tc-bg-surface)] p-1 text-[var(--tc-text-muted)]',
         disabled && 'opacity-60 pointer-events-none',
-        className
+        className,
       )}
     >
       {availableModes.map((opt) => {
@@ -112,7 +112,7 @@ export function ModeSwitcher({
               'cursor-pointer select-none',
               isSelected
                 ? 'bg-[var(--tc-bg-base)] text-[var(--tc-accent-cyan)] shadow-sm border border-[var(--tc-accent-cyan)]/30 font-semibold'
-                : 'text-[var(--tc-text-muted)] hover:text-[var(--tc-text-primary)] hover:bg-[var(--tc-border-subtle)]/30 border border-transparent'
+                : 'text-[var(--tc-text-muted)] hover:text-[var(--tc-text-primary)] hover:bg-[var(--tc-border-subtle)]/30 border border-transparent',
             )}
           >
             <span>{opt.label}</span>
@@ -121,7 +121,7 @@ export function ModeSwitcher({
                 'ml-1.5 rounded-[var(--tc-radius-sm)] px-1.5 py-0.2 text-[10px] font-mono transition-colors uppercase tracking-wider',
                 isSelected
                   ? 'bg-[var(--tc-accent-cyan)]/15 text-[var(--tc-accent-cyan)] font-bold'
-                  : 'bg-[var(--tc-border-subtle)] text-[var(--tc-text-muted)] group-hover:text-[var(--tc-text-primary)]'
+                  : 'bg-[var(--tc-border-subtle)] text-[var(--tc-text-muted)] group-hover:text-[var(--tc-text-primary)]',
               )}
             >
               {opt.badge}

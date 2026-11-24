@@ -98,9 +98,7 @@ describe('Action Trace Schema, Recorder, and Replayer (packages/engine/trace)', 
         ],
         clientTerminalHash: '0123456789abcdef',
       };
-      expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(
-        TraceValidationError,
-      );
+      expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(TraceValidationError);
     });
 
     it('rejects action at tick 0 in DiscreteActionSchema (MA-01)', () => {
@@ -121,9 +119,7 @@ describe('Action Trace Schema, Recorder, and Replayer (packages/engine/trace)', 
         ],
         clientTerminalHash: '0123456789abcdef',
       };
-      expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(
-        TraceValidationError,
-      );
+      expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(TraceValidationError);
       expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(
         /exceeds trace totalTicks/,
       );
@@ -141,9 +137,7 @@ describe('Action Trace Schema, Recorder, and Replayer (packages/engine/trace)', 
         ],
         clientTerminalHash: '0123456789abcdef',
       };
-      expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(
-        TraceValidationError,
-      );
+      expect(() => ActionTraceReplayer.validateTrace(trace)).toThrowError(TraceValidationError);
     });
   });
 
@@ -277,9 +271,7 @@ describe('Action Trace Schema, Recorder, and Replayer (packages/engine/trace)', 
         clientTerminalHash: '0123456789abcdef',
       };
 
-      expect(() => ActionTraceReplayer.replay(engine, trace)).toThrowError(
-        TraceValidationError,
-      );
+      expect(() => ActionTraceReplayer.replay(engine, trace)).toThrowError(TraceValidationError);
     });
 
     it('rejects trace when totalTicks exceeds engine maxTicks', () => {
@@ -299,9 +291,7 @@ describe('Action Trace Schema, Recorder, and Replayer (packages/engine/trace)', 
         clientTerminalHash: '0123456789abcdef',
       };
 
-      expect(() => ActionTraceReplayer.replay(engine, trace)).toThrowError(
-        TraceTimeoutError,
-      );
+      expect(() => ActionTraceReplayer.replay(engine, trace)).toThrowError(TraceTimeoutError);
     });
   });
 });

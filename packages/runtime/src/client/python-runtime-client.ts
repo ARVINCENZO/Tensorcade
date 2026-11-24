@@ -78,7 +78,7 @@ export class PythonRuntimeClient {
 
   public async loadWorldPackages(
     worldOrGameId: string,
-    onProgress?: ProgressCallback
+    onProgress?: ProgressCallback,
   ): Promise<boolean> {
     const packages = WorldPackageRegistry.getPackagesForWorld(worldOrGameId);
     if (packages.length === 0) {
@@ -102,7 +102,10 @@ export class PythonRuntimeClient {
     return success;
   }
 
-  public async inspectAst(code: string, constraints?: AstConstraints): Promise<AstInspectionResult> {
+  public async inspectAst(
+    code: string,
+    constraints?: AstConstraints,
+  ): Promise<AstInspectionResult> {
     if (!this.api) {
       await this.init();
     }
@@ -110,7 +113,7 @@ export class PythonRuntimeClient {
   }
 
   public async executeCode<TAction = unknown>(
-    rawRequest: CodeExecutionRequest
+    rawRequest: CodeExecutionRequest,
   ): Promise<CodeExecutionResponse<TAction>> {
     // 1. Zod boundary validation on request
     const request = CodeExecutionRequestSchema.parse(rawRequest);
@@ -153,7 +156,7 @@ export class PythonRuntimeClient {
 
         const diagnosticError = DiagnosticErrorMapper.mapError(
           `TimeoutError: Execution exceeded ${Math.round(totalHardTimeout / 100) / 10}s and was terminated by hard watchdog.`,
-          request.code
+          request.code,
         );
 
         resolve({
@@ -210,7 +213,7 @@ export class PythonRuntimeClient {
       });
     } else {
       throw new Error(
-        'Web Worker is not supported in this environment without a custom workerFactory.'
+        'Web Worker is not supported in this environment without a custom workerFactory.',
       );
     }
 

@@ -56,9 +56,7 @@ describe('ErrorFeedbackPanel', () => {
 
   describe('Static markup and pedagogical anatomy (docs/02-learning-design.md §9)', () => {
     it('renders the complete 4-part diagnostic feedback anatomy', () => {
-      const html = renderToStaticMarkup(
-        <ErrorFeedbackPanel error={mockDiagnosticError} />,
-      );
+      const html = renderToStaticMarkup(<ErrorFeedbackPanel error={mockDiagnosticError} />);
 
       // 1. WHAT HAPPENED
       expect(html).toContain('1. WHAT HAPPENED:');
@@ -84,9 +82,7 @@ describe('ErrorFeedbackPanel', () => {
     });
 
     it('enforces adult, respectful tone with zero juvenile phrasing', () => {
-      const html = renderToStaticMarkup(
-        <ErrorFeedbackPanel error={mockDiagnosticError} />,
-      );
+      const html = renderToStaticMarkup(<ErrorFeedbackPanel error={mockDiagnosticError} />);
 
       expect(html.toLowerCase()).not.toContain('oops');
       expect(html.toLowerCase()).not.toContain('whoops');
@@ -95,9 +91,7 @@ describe('ErrorFeedbackPanel', () => {
     });
 
     it('has accessible role="alert" and assertive live region attributes', () => {
-      const html = renderToStaticMarkup(
-        <ErrorFeedbackPanel error={mockDiagnosticError} />,
-      );
+      const html = renderToStaticMarkup(<ErrorFeedbackPanel error={mockDiagnosticError} />);
 
       expect(html).toContain('role="alert"');
       expect(html).toContain('aria-live="assertive"');
@@ -133,10 +127,7 @@ describe('ErrorFeedbackPanel', () => {
 
       await act(async () => {
         root?.render(
-          <ErrorFeedbackPanel
-            error={mockDiagnosticError}
-            onJumpToLine={onJumpToLine}
-          />,
+          <ErrorFeedbackPanel error={mockDiagnosticError} onJumpToLine={onJumpToLine} />,
         );
       });
 
@@ -196,12 +187,7 @@ describe('ErrorFeedbackPanel', () => {
       const onDismiss = vi.fn();
 
       await act(async () => {
-        root?.render(
-          <ErrorFeedbackPanel
-            error={mockDiagnosticError}
-            onDismiss={onDismiss}
-          />,
-        );
+        root?.render(<ErrorFeedbackPanel error={mockDiagnosticError} onDismiss={onDismiss} />);
       });
 
       const dismissButton = container?.querySelector(

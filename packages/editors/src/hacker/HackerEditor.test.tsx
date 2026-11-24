@@ -90,30 +90,30 @@ describe('Monaco Hacker Editor (Sub-step 5b.1)', () => {
     it('isRangeIntersectingLocked detects range collisions accurately', () => {
       // Inside first locked range
       expect(
-        isRangeIntersectingLocked({ startLineNumber: 2, endLineNumber: 2 }, lockedRanges)
+        isRangeIntersectingLocked({ startLineNumber: 2, endLineNumber: 2 }, lockedRanges),
       ).toBe(true);
 
       // Straddling boundary
       expect(
-        isRangeIntersectingLocked({ startLineNumber: 3, endLineNumber: 5 }, lockedRanges)
+        isRangeIntersectingLocked({ startLineNumber: 3, endLineNumber: 5 }, lockedRanges),
       ).toBe(true);
       expect(
-        isRangeIntersectingLocked({ startLineNumber: 0, endLineNumber: 1 }, lockedRanges)
+        isRangeIntersectingLocked({ startLineNumber: 0, endLineNumber: 1 }, lockedRanges),
       ).toBe(true);
 
       // Spanning completely over a locked range
       expect(
-        isRangeIntersectingLocked({ startLineNumber: 0, endLineNumber: 12 }, lockedRanges)
+        isRangeIntersectingLocked({ startLineNumber: 0, endLineNumber: 12 }, lockedRanges),
       ).toBe(true);
 
       // Safe region in between
       expect(
-        isRangeIntersectingLocked({ startLineNumber: 4, endLineNumber: 7 }, lockedRanges)
+        isRangeIntersectingLocked({ startLineNumber: 4, endLineNumber: 7 }, lockedRanges),
       ).toBe(false);
 
       // Safe region after
       expect(
-        isRangeIntersectingLocked({ startLineNumber: 11, endLineNumber: 15 }, lockedRanges)
+        isRangeIntersectingLocked({ startLineNumber: 11, endLineNumber: 15 }, lockedRanges),
       ).toBe(false);
     });
 
@@ -158,7 +158,9 @@ describe('Monaco Hacker Editor (Sub-step 5b.1)', () => {
         stopPropagation,
       } as unknown as IKeyboardEvent;
 
-      const intercepted = handleLockedKeyDown(mockEvent, mockEditor, [{ startLine: 1, endLine: 3 }]);
+      const intercepted = handleLockedKeyDown(mockEvent, mockEditor, [
+        { startLine: 1, endLine: 3 },
+      ]);
       expect(intercepted).toBe(true);
       expect(preventDefault).toHaveBeenCalled();
       expect(stopPropagation).toHaveBeenCalled();
@@ -184,7 +186,9 @@ describe('Monaco Hacker Editor (Sub-step 5b.1)', () => {
         stopPropagation,
       } as unknown as IKeyboardEvent;
 
-      const interceptedNav = handleLockedKeyDown(navEvent, mockEditor, [{ startLine: 1, endLine: 3 }]);
+      const interceptedNav = handleLockedKeyDown(navEvent, mockEditor, [
+        { startLine: 1, endLine: 3 },
+      ]);
       expect(interceptedNav).toBe(false);
       expect(preventDefault).not.toHaveBeenCalled();
 
@@ -197,7 +201,9 @@ describe('Monaco Hacker Editor (Sub-step 5b.1)', () => {
         stopPropagation,
       } as unknown as IKeyboardEvent;
 
-      const interceptedCopy = handleLockedKeyDown(copyEvent, mockEditor, [{ startLine: 1, endLine: 3 }]);
+      const interceptedCopy = handleLockedKeyDown(copyEvent, mockEditor, [
+        { startLine: 1, endLine: 3 },
+      ]);
       expect(interceptedCopy).toBe(false);
       expect(preventDefault).not.toHaveBeenCalled();
     });
@@ -219,7 +225,9 @@ describe('Monaco Hacker Editor (Sub-step 5b.1)', () => {
         stopPropagation: vi.fn(),
       } as unknown as IKeyboardEvent;
 
-      const intercepted = handleLockedKeyDown(mockEvent, mockEditor, [{ startLine: 1, endLine: 3 }]);
+      const intercepted = handleLockedKeyDown(mockEvent, mockEditor, [
+        { startLine: 1, endLine: 3 },
+      ]);
       expect(intercepted).toBe(false);
       expect(preventDefault).not.toHaveBeenCalled();
     });
@@ -331,7 +339,7 @@ describe('Monaco Hacker Editor (Sub-step 5b.1)', () => {
           code="print('hello tensorcade')"
           height="300px"
           className="custom-editor-class"
-        />
+        />,
       );
 
       expect(html).toContain('role="region"');

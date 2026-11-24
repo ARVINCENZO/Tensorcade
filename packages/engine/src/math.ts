@@ -73,7 +73,7 @@ export function detExp(x: number): number {
 
   // High-precision range reduction: x = k * ln(2) + r
   const k = Math.round(x * INV_LN2);
-  const r = (x - k * LN2_HI) - k * LN2_LO;
+  const r = x - k * LN2_HI - k * LN2_LO;
 
   // 10th-degree polynomial for e^r via Horner's form:
   const c10 = 1.0 / 3628800.0;
@@ -94,17 +94,7 @@ export function detExp(x: number): number {
       (c1 +
         r *
           (c2 +
-            r *
-              (c3 +
-                r *
-                  (c4 +
-                    r *
-                      (c5 +
-                        r *
-                          (c6 +
-                            r *
-                              (c7 +
-                                r * (c8 + r * (c9 + r * c10)))))))));
+            r * (c3 + r * (c4 + r * (c5 + r * (c6 + r * (c7 + r * (c8 + r * (c9 + r * c10)))))))));
 
   return detPow2(k) * er;
 }
@@ -190,15 +180,7 @@ export function detSin(x: number): number {
   const c15 = 1.0 / 1307674368000.0;
 
   return (
-    y *
-    (c1 -
-      y2 *
-        (c3 -
-          y2 *
-            (c5 -
-              y2 *
-                (c7 -
-                  y2 * (c9 - y2 * (c11 - y2 * (c13 - y2 * c15)))))))
+    y * (c1 - y2 * (c3 - y2 * (c5 - y2 * (c7 - y2 * (c9 - y2 * (c11 - y2 * (c13 - y2 * c15)))))))
   );
 }
 

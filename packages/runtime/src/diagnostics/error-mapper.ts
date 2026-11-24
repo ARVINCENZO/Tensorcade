@@ -22,8 +22,7 @@ interface ErrorExplanation {
 const ERROR_EXPLANATIONS: Record<string, (details: string) => ErrorExplanation> = {
   SyntaxError: (details) => ({
     whatHappened: `Python could not understand this code because of a syntax error: ${details || 'invalid syntax'}.`,
-    whyItMatters:
-      'Python grammar requires exact syntax before code can be parsed and executed.',
+    whyItMatters: 'Python grammar requires exact syntax before code can be parsed and executed.',
     whatToInvestigate:
       'Check for missing colons (:) at the end of def/for/if statements, mismatched brackets (), or unclosed quotes.',
   }),
@@ -50,8 +49,7 @@ const ERROR_EXPLANATIONS: Record<string, (details: string) => ErrorExplanation> 
   }),
   KeyError: (details) => ({
     whatHappened: `Dictionary key not found: ${details}.`,
-    whyItMatters:
-      'Dictionaries only contain mappings for keys that have been explicitly stored.',
+    whyItMatters: 'Dictionaries only contain mappings for keys that have been explicitly stored.',
     whatToInvestigate:
       'Check if the key exists using "if key in dict:" or use "dict.get(key, default)" to avoid KeyError.',
   }),
@@ -77,7 +75,8 @@ const ERROR_EXPLANATIONS: Record<string, (details: string) => ErrorExplanation> 
       'Confirm the exact data type of the object you are inspecting and verify that the method name is spelled correctly.',
   }),
   MemoryError: () => ({
-    whatHappened: 'Memory allocation limit exceeded (attempted to allocate more memory than permitted in this sandbox).',
+    whatHappened:
+      'Memory allocation limit exceeded (attempted to allocate more memory than permitted in this sandbox).',
     whyItMatters:
       'Algorithms on memory-constrained systems must operate within bounded memory footprints.',
     whatToInvestigate:
@@ -111,7 +110,8 @@ export class DiagnosticErrorMapper {
    * Translates a raw Python error or traceback into structured 4-part pedagogical feedback.
    */
   public static mapError(rawError: string | Error, userCode: string): DiagnosticError {
-    const rawTraceback = typeof rawError === 'string' ? rawError : (rawError.stack ?? rawError.message);
+    const rawTraceback =
+      typeof rawError === 'string' ? rawError : (rawError.stack ?? rawError.message);
     const lines = userCode.split('\n');
 
     // 1. Identify exception class and message
@@ -137,7 +137,9 @@ export class DiagnosticErrorMapper {
 
     for (let i = 0; i < tbLines.length; i++) {
       const tbLine = tbLines[i] ?? '';
-      const fileMatch = tbLine.match(/File\s+["'](?:<learner_code>|<exec>|<string>)["'],\s+line\s+(\d+)/);
+      const fileMatch = tbLine.match(
+        /File\s+["'](?:<learner_code>|<exec>|<string>)["'],\s+line\s+(\d+)/,
+      );
       if (fileMatch && fileMatch[1]) {
         errorLine = parseInt(fileMatch[1], 10);
 
@@ -157,11 +159,13 @@ export class DiagnosticErrorMapper {
     const sourceSnippet = lines[safeLine - 1]?.trim() ?? '';
 
     // 3. Generate pedagogical 4-part explanation
-    const explanationFactory = ERROR_EXPLANATIONS[errorType] ?? ((details: string) => ({
-      whatHappened: `A runtime error occurred: ${details || errorType}.`,
-      whyItMatters: 'The program encountered an unexpected state during execution.',
-      whatToInvestigate: 'Examine the logic leading up to line ' + safeLine + '.',
-    }));
+    const explanationFactory =
+      ERROR_EXPLANATIONS[errorType] ??
+      ((details: string) => ({
+        whatHappened: `A runtime error occurred: ${details || errorType}.`,
+        whyItMatters: 'The program encountered an unexpected state during execution.',
+        whatToInvestigate: 'Examine the logic leading up to line ' + safeLine + '.',
+      }));
 
     const explanation = explanationFactory(errorDetails);
 

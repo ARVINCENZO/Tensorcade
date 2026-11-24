@@ -9,9 +9,7 @@ export const TENSORCADE_MARKER_OWNER = 'tensorcade-diagnostics';
  * Formats a 4-part pedagogical DiagnosticError into an accessible Monaco error message.
  */
 export function formatDiagnosticMarkerMessage(diagnostic: DiagnosticError): string {
-  const parts: string[] = [
-    `${diagnostic.errorType}: ${diagnostic.whatHappened}`,
-  ];
+  const parts: string[] = [`${diagnostic.errorType}: ${diagnostic.whatHappened}`];
 
   if (diagnostic.whyItMatters.trim().length > 0) {
     parts.push(`\n\n[Why this matters]\n${diagnostic.whyItMatters}`);
@@ -30,7 +28,7 @@ export function formatDiagnosticMarkerMessage(diagnostic: DiagnosticError): stri
 export function applyDiagnosticMarkers(
   monacoInstance: Monaco,
   model: editor.ITextModel,
-  diagnosticError?: DiagnosticError | undefined
+  diagnosticError?: DiagnosticError | undefined,
 ): void {
   if (!diagnosticError) {
     monacoInstance.editor.setModelMarkers(model, TENSORCADE_MARKER_OWNER, []);
