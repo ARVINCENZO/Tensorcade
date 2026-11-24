@@ -9,22 +9,25 @@
 
 const CACHE_NAME = 'tensorcade-pyodide-v314.0.8';
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (_event) => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key.startsWith('tensorcade-pyodide-') && key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-          return Promise.resolve(false);
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches
+      .keys()
+      .then((keys) => {
+        return Promise.all(
+          keys.map((key) => {
+            if (key.startsWith('tensorcade-pyodide-') && key !== CACHE_NAME) {
+              return caches.delete(key);
+            }
+            return Promise.resolve(false);
+          }),
+        );
+      })
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -58,7 +61,7 @@ self.addEventListener('fetch', (event) => {
             return networkResponse;
           });
         });
-      })
+      }),
     );
   }
 });
