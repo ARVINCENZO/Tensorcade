@@ -52,7 +52,7 @@ test.describe('World 1: Robot Farm E2E Playthrough & Accessibility Flows', () =>
       await page.getByLabel(/Reduced Motion/i).click();
     }
     await page.keyboard.press('Escape');
-    await expect(page.locator('[data-reduced-motion="true"]')).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('data-reduced-motion', 'true');
 
     // 7. Verify Level 1.12 capstone lazy chunk loads cleanly
     await page.goto('/level/w1-robot-farm-1.12');
