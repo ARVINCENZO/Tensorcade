@@ -43,8 +43,29 @@ export interface RoverState {
   y: number;
   heading: Direction;
   energy: number;
+  maxEnergy?: number | undefined;
   inventory: number;
 }
+
+export interface GridWorldMetadata {
+  readonly rowLength?: number | undefined;
+  readonly plotLengths?: ReadonlyArray<number> | undefined;
+}
+
+export type GridWorldGeneratorType =
+  | 'static'
+  | 'first_furrow'
+  | 'corner_corridor'
+  | 'variable_row'
+  | 'skip_row'
+  | 'selective_row'
+  | 'rock_corridor'
+  | 'hazard_triage'
+  | 'shifting_perimeter'
+  | 'battery_relay'
+  | 'multi_plot'
+  | 'modular_plots'
+  | 'capstone_dome';
 
 export interface GridWorldConfig {
   readonly levelId: string;
@@ -57,14 +78,18 @@ export interface GridWorldConfig {
     readonly y: number;
     readonly heading: Direction;
     readonly energy: number;
+    readonly maxEnergy?: number | undefined;
   };
   readonly crops: ReadonlyArray<Position>;
   readonly rocks?: ReadonlyArray<Position>;
   readonly ravines?: ReadonlyArray<Position>;
+  readonly bases?: ReadonlyArray<Position>;
   readonly star2TickThreshold?: number;
+  readonly metadata?: GridWorldMetadata;
 }
 
-export type RobotActionType = 'MOVE_FORWARD' | 'TURN_LEFT' | 'TURN_RIGHT' | 'HARVEST' | 'WAIT';
+export type RobotActionType =
+  'MOVE_FORWARD' | 'TURN_LEFT' | 'TURN_RIGHT' | 'HARVEST' | 'WAIT' | 'RECHARGE';
 
 export interface RobotActionParams {
   readonly type?: RobotActionType;

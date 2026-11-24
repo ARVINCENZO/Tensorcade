@@ -75,6 +75,18 @@ export class RobotFarmSimulation extends BaseSimulationEngine<GridWorldState, Ro
       }
     }
 
+    // Place recharge bases
+    if (config.bases) {
+      for (const base of config.bases) {
+        const row = grid[base.y];
+        if (row && base.x >= 0 && base.x < config.width) {
+          row[base.x] = CellType.BASE;
+        }
+      }
+    }
+
+    const maxEnergy = config.initialRover.maxEnergy ?? config.initialRover.energy;
+
     return {
       width: config.width,
       height: config.height,
@@ -83,6 +95,7 @@ export class RobotFarmSimulation extends BaseSimulationEngine<GridWorldState, Ro
         y: config.initialRover.y,
         heading: config.initialRover.heading,
         energy: config.initialRover.energy,
+        maxEnergy,
         inventory: 0,
       },
       grid,
@@ -165,6 +178,20 @@ export class RobotFarmSimulation extends BaseSimulationEngine<GridWorldState, Ro
           this.state.cropsHarvested += 1;
         }
         this.state.rover.energy -= 1;
+        break;
+      }
+
+      case 'RECHARGE': {
+        const rx = this.state.rover.x;
+        const ry = this.state.rover.y;
+        if (this.state.grid[ry]?.[rx] === CellType.BASE) {
+          this.state.rover.energy =
+            this.state.rover.maxEnergy ??
+            this.config.initialRover.maxEnergy ??
+            this.config.initialRover.energy;
+        } else {
+          this.state.rover.energy -= 1;
+        }
         break;
       }
 
@@ -284,5 +311,54 @@ export class RobotFarmSimulation extends BaseSimulationEngine<GridWorldState, Ro
 
   public getGridWorldState(): Readonly<GridWorldState> {
     return this.state;
+  }
+
+  public isFrontClear(): boolean {
+    const [dx, dy] = DIRECTION_VECTORS[this.state.rover.heading];
+    const nx = this.state.rover.x + dx;
+    const ny = this.state.rover.y + dy;
+    if (nx < 0 || nx >= this.state.width || ny < 0 || ny >= this.state.height) {
+      return false;
+    }
+    const cell = this.state.grid[ny]?.[nx];
+    return cell !== CellType.ROCK && cell !== CellType.RAVINE;
+  }
+
+  public isRockAhead(): boolean {
+    const [dx, dy] = DIRECTION_VECTORS[this.state.rover.heading];
+    const nx = this.state.rover.x + dx;
+    const ny = this.state.rover.y + dy;
+    if (nx < 0 || nx >= this.state.width || ny < 0 || ny >= this.state.height) {
+      return false;
+    }
+    return this.state.grid[ny]?.[nx] === CellType.ROCK;
+  }
+
+  public isRavineAhead(): boolean {
+    const [dx, dy] = DIRECTION_VECTORS[this.state.rover.heading];
+    const nx = this.state.rover.x + dx;
+    const ny = this.state.rover.y + dy;
+    if (nx < 0 || nx >= this.state.width || ny < 0 || ny >= this.state.height) {
+      return true;
+    }
+    return this.state.grid[ny]?.[nx] === CellType.RAVINE;
+  }
+
+  public canHarvest(): boolean {
+    return this.state.grid[this.state.rover.y]?.[this.state.rover.x] === CellType.CROP;
+  }
+
+  public isOnBase(): boolean {
+    return this.state.grid[this.state.rover.y]?.[this.state.rover.x] === CellType.BASE;
+  }
+
+  public hasEnergy(): boolean {
+    return this.state.rover.energy > 0;
+  }
+
+  public isFieldCleared(): boolean {
+    return (
+      this.state.totalCropsInitial > 0 && this.state.cropsHarvested >= this.state.totalCropsInitial
+    );
   }
 }

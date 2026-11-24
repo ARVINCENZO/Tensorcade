@@ -181,4 +181,65 @@ describe('RobotFarmSimulation Grid-World Module (packages/engine/grid-world)', (
     expect(result.outcome.status).toBe('WON');
     expect(result.outcome.starsAwarded).toBe(3);
   });
+
+  it('recharges energy to maxEnergy on BASE tiles and penalizes off-base RECHARGE', () => {
+    const baseConfig: GridWorldConfig = {
+      ...basicConfig,
+      initialRover: {
+        x: 0,
+        y: 0,
+        heading: Direction.EAST,
+        energy: 5,
+        maxEnergy: 12,
+      },
+      bases: [{ x: 1, y: 0 }],
+      crops: [{ x: 2, y: 0 }],
+    };
+
+    const sim = new RobotFarmSimulation(baseConfig);
+    expect(sim.isOnBase()).toBe(false);
+    expect(sim.isFrontClear()).toBe(true);
+    expect(sim.canHarvest()).toBe(false);
+    expect(sim.hasEnergy()).toBe(true);
+    expect(sim.isFieldCleared()).toBe(false);
+
+    // Off-base RECHARGE consumes 1 energy as penalty
+    sim.step([{ tick: 1, type: 'RECHARGE', params: { type: 'RECHARGE' } }]);
+    expect(sim.getGridWorldState().rover.energy).toBe(4);
+
+    // Move onto BASE tile at (1, 0)
+    sim.step([{ tick: 2, type: 'MOVE_FORWARD', params: { type: 'MOVE_FORWARD' } }]);
+    expect(sim.isOnBase()).toBe(true);
+    expect(sim.getGridWorldState().rover.energy).toBe(3);
+
+    // Recharge on BASE restores maxEnergy (12)
+    sim.step([{ tick: 3, type: 'RECHARGE', params: { type: 'RECHARGE' } }]);
+    expect(sim.getGridWorldState().rover.energy).toBe(12);
+
+    // Move onto CROP at (2, 0), inspect sensors, and harvest
+    sim.step([{ tick: 4, type: 'MOVE_FORWARD', params: { type: 'MOVE_FORWARD' } }]);
+    expect(sim.canHarvest()).toBe(true);
+    expect(sim.isRockAhead()).toBe(true);
+    expect(sim.isFrontClear()).toBe(false);
+    expect(sim.isRavineAhead()).toBe(false);
+
+    sim.step([{ tick: 5, type: 'HARVEST', params: { type: 'HARVEST' } }]);
+    expect(sim.isFieldCleared()).toBe(true);
+    expect(sim.getOutcome().status).toBe('WON');
+  });
+
+  it('detects ravines and out-of-bounds edges via isRavineAhead sensor', () => {
+    const sim = new RobotFarmSimulation(basicConfig);
+    // Turn left to face NORTH (out of bounds at y = -1)
+    sim.step([{ tick: 1, type: 'TURN_LEFT', params: { type: 'TURN_LEFT' } }]);
+    expect(sim.isFrontClear()).toBe(false);
+    expect(sim.isRockAhead()).toBe(false);
+    expect(sim.isRavineAhead()).toBe(true);
+
+    // Turn around to face SOUTH (ravine at (0, 1))
+    sim.step([{ tick: 2, type: 'TURN_LEFT', params: { type: 'TURN_LEFT' } }]);
+    sim.step([{ tick: 3, type: 'TURN_LEFT', params: { type: 'TURN_LEFT' } }]);
+    expect(sim.isFrontClear()).toBe(false);
+    expect(sim.isRavineAhead()).toBe(true);
+  });
 });

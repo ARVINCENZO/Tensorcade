@@ -92,6 +92,9 @@ export const AstConstraintsSchema = z.object({
   bannedTokens: z.array(z.string()).optional(),
   requiredFunctions: z.array(z.string()).optional(),
   bannedImports: z.array(z.string()).optional(),
+  requiredConstructs: z.array(z.string()).optional(),
+  maxActionCalls: z.record(z.string(), z.number().int().nonnegative()).optional(),
+  minFunctionParams: z.number().int().positive().optional(),
 });
 export type AstConstraints = z.infer<typeof AstConstraintsSchema>;
 
